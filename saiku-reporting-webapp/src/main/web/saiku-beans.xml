@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
+	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />	
+	<bean id="memoryBasedMetadataDomainRepository" class="org.saiku.reporting.backend.server.MemoryBasedMetadataDomainRepository" />	
+	<bean id="metadataRepository" class="org.saiku.reporting.backend.server.MetadataRepositoryImpl" />	
+	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService" />	
+
+</beans>

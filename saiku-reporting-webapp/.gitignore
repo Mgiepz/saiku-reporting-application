@@ -1,0 +1,13 @@
+build/
+dist/
+/bin
+/lib
+nbproject/private/
+.DS_Store
+/override.properties
+/classes/**
+/classes-test/**
+*~
+runtime-lib/
+.project
+target/
