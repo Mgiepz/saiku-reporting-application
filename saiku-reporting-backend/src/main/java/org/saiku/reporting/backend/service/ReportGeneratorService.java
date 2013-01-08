@@ -77,6 +77,28 @@ public class ReportGeneratorService {
     private MetadataRepository metadataRepository;
 	
 	private URL repoURL;
+	
+    
+	private MasterReport prepareReport(ReportSpecification spec) throws SaikuReportingException, ResourceLoadingException, ResourceCreationException, ResourceKeyCreationException, MalformedURLException, ResourceException {
+		
+		 ClassicEngineBoot.getInstance().start();
+
+	        SaikuReportProcessor saikuProcessor = new SaikuReportProcessor();
+
+	        //Get the report template 
+	        MasterReport mReport = getPrptTemplate(spec);
+
+	        //generate the datasource and attach it to the report
+	        DatasourceType dsType = spec.getDataSource().getType();
+			
+	        if(DatasourceType.CDA.equals(dsType)){
+	        	generateCdaDatasource(mReport, spec);
+	        }else if(DatasourceType.METADATA.equals(dsType)){
+	        	generatePmdDatasource(mReport, spec);
+	        }
+	        
+		return saikuProcessor.preProcessReport(mReport, spec);
+	}
 
     /**
      * This method is the service entrypoint for rendering a report to html
@@ -92,25 +114,8 @@ public class ReportGeneratorService {
     public void renderReportHtml(ReportSpecification spec,
             HtmlReport report, Integer acceptedPage) throws ResourceException, MalformedURLException, SaikuReportingException {
 
-        ClassicEngineBoot.getInstance().start();
-
-        SaikuReportProcessor saikuProcessor = new SaikuReportProcessor();
-
-        //Get the report template 
-        MasterReport mReport = getPrptTemplate(spec);
-
-        //generate the datasource and attach it to the report
-        DatasourceType dsType = spec.getDataSource().getType();
-		
-        if(DatasourceType.CDA.equals(dsType)){
-        	generateCdaDatasource(mReport, spec);
-        }else if(DatasourceType.METADATA.equals(dsType)){
-        	generatePmdDatasource(mReport, spec);
-        }
-
         //preprocess the report and augment the spec with all infos from the template
-        MasterReport output = saikuProcessor.preProcessReport(mReport, spec);
-
+        MasterReport output = prepareReport(spec); 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Map<String, Object> reportParameters = null; //ParamUtils.getReportParameters("", spec);
@@ -130,6 +135,24 @@ public class ReportGeneratorService {
 
 
     }
+
+	public void renderReportPdf(ReportSpecification spec,
+			ByteArrayOutputStream stream) throws ResourceLoadingException, ResourceCreationException, ResourceKeyCreationException, MalformedURLException, SaikuReportingException, ResourceException {
+		
+        //preprocess the report and augment the spec with all infos from the template
+        MasterReport output = prepareReport(spec); 
+        
+        Map<String, Object> reportParameters = null; //ParamUtils.getReportParameters("", spec);
+
+        try {
+            //let the engine process the report
+            generatePdfReport(output, stream, reportParameters);
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new SaikuReportingException("failed to generate pdf");
+        }
+		
+	}
 
     private MasterReport getPrptTemplate(ReportSpecification spec) throws ResourceLoadingException,
             ResourceCreationException, ResourceKeyCreationException,
@@ -185,9 +208,11 @@ public class ReportGeneratorService {
         report.setCurrentPage(pentahoReportingPlugin.getAcceptedPage());
         report.setPageCount(pentahoReportingPlugin.getPageCount());
 
- //       GenerateTest.storeReport(pentahoReportingPlugin.getReport());
+        //GenerateTest.storeReport(pentahoReportingPlugin.getReport());
 
     }
+    
+    
 
     /**
      * Generate the report as pdf

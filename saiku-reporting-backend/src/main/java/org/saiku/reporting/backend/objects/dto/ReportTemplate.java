@@ -19,40 +19,27 @@
  */
 package org.saiku.reporting.backend.objects.dto;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class ReportTemplate {
 
-    public ReportTemplate() {
+	public ReportTemplate(String url, String name, String description) {
+		super();
+		this.setUrl(url);
+		this.name = name;
+		this.description = description;
+	}
+
+	public ReportTemplate() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public ReportTemplate(String solution, String path, String name) {
-        this.solution = solution;
-        this.path = path;
-        this.name = name;
+    public ReportTemplate(String url) {
+        this.setUrl(url);
     }
-    private String solution;
-    private String path;
+    
+    private String url;
     private String name;
     private String description;
-
-    public String getSolution() {
-        return solution;
-    }
-
-    public void setSolution(String solution) {
-        this.solution = solution;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 
     public String getName() {
         return name;
@@ -62,12 +49,6 @@ public class ReportTemplate {
         this.name = name;
     }
 
-    @JsonIgnore
-    public String getFullPath() {
-        return null;
-        //return ActionInfo.buildSolutionPath(solution, path, name + ".prpt");
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -75,4 +56,12 @@ public class ReportTemplate {
     public String getDescription() {
         return description;
     }
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }

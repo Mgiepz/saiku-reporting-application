@@ -100,9 +100,7 @@ public class MetadataDiscoverResource {
     @Produces({"application/json"})
     @Path("/templates")
     public ReportTemplate[] getReportTemplates() {
-
-        return null;
-
+    	return null;
     }
 
     /**
