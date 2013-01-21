@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +58,7 @@ import org.saiku.reporting.backend.server.MetadataRepository;
 import org.saiku.reporting.backend.server.SaikuPmdConnectionProvider;
 import org.saiku.reporting.component.StandaloneReportingComponent;
 import org.saiku.reporting.core.SaikuReportProcessor;
+import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.types.DatasourceType;
 import org.slf4j.Logger;
@@ -65,6 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import pt.webdetails.cda.connections.Connection;
 import pt.webdetails.cda.connections.metadata.MetadataConnection;
+import pt.webdetails.cda.dataaccess.ColumnDefinition;
 import pt.webdetails.cda.dataaccess.MqlDataAccess;
 import pt.webdetails.cda.dataaccess.Parameter;
 import pt.webdetails.cda.settings.CdaSettings;
@@ -298,14 +301,31 @@ public class ReportGeneratorService {
         if (m.find()) {
             domainId = m.group(1);
         }
+        
+        mql = mql.replace("<![CDATA[", "").replace("]]>", "");
 
-    	
+		// and then the calculated columns
+        final Collection<ColumnDefinition> calculatedColumns = new ArrayList<ColumnDefinition>();
+        
+		for (FieldDefinition fieldDefinition : spec.getFieldDefinitions()) {
+			if(fieldDefinition.getFormula()!=null){
+				ColumnDefinition columnDef = new ColumnDefinition();
+				columnDef.setName(fieldDefinition.getId());
+				columnDef.setType(ColumnDefinition.TYPE.CALCULATED_COLUMN);
+				columnDef.setFormula("=" + fieldDefinition.getFormula());
+				calculatedColumns.add(columnDef);
+			}
+		}
+        
 		String id = spec.getDataSource().getId();
 		CdaSettings cda = new CdaSettings(id, null);
 
 		Connection connection = new MetadataConnection("1", domainId , domainId.split("/")[1]);
 		MqlDataAccess dataAccess = new MqlDataAccess(id, id, "1",mql);
 		dataAccess.setParameters(new ArrayList<Parameter>());
+		dataAccess.getColumnDefinitions().clear();
+		dataAccess.getColumnDefinitions().addAll(calculatedColumns);
+
 		cda.addConnection(connection);
 		cda.addDataAccess(dataAccess);
 

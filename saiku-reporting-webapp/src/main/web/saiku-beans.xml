@@ -6,8 +6,10 @@
 
 	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
 	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />	
+	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
 	<bean id="memoryBasedMetadataDomainRepository" class="org.saiku.reporting.backend.server.MemoryBasedMetadataDomainRepository" />	
 	<bean id="metadataRepository" class="org.saiku.reporting.backend.server.MetadataRepositoryImpl" />	
 	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService" />	
-
+	<bean id="cdaService" class="org.saiku.reporting.backend.service.CdaService" />	
+	
 </beans>

@@ -1,11 +1,10 @@
 package org.saiku.reporting.backend.rest;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,11 +17,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.saiku.reporting.backend.exceptions.SaikuClientException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
+import org.saiku.reporting.backend.service.CdaService;
 import org.saiku.reporting.backend.service.ReportGeneratorService;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,9 @@ public class ReportGeneratorResource {
 
 	@Autowired
 	private ReportGeneratorService reportGeneratorService;
-
+	
+	@Autowired
+    private CdaService cda;
 
 	@POST
 	@Produces({"application/json" })
@@ -75,7 +75,7 @@ public class ReportGeneratorResource {
 		try {
 			if (reportSpec != null) {
 				ObjectMapper mapper = new ObjectMapper();
-				spec = mapper.readValue(reportSpec,ReportSpecification.class);
+				spec = mapper.readValue(URLDecoder.decode(reportSpec, "UTF-8"),ReportSpecification.class);
 
 			}
 			
@@ -96,6 +96,37 @@ public class ReportGeneratorResource {
 		}
 	}
 
+	@POST
+	@Consumes("application/x-www-form-urlencoded")
+	@Produces({ "application/vnd.ms-excel" })
+	@Path("/xls")
+	public Response exportXls(@FormParam("json") String reportSpec) {
+		
+		ReportSpecification spec = null;
+
+		try {
+			if (reportSpec != null) {
+				ObjectMapper mapper = new ObjectMapper();
+				spec = mapper.readValue(URLDecoder.decode(reportSpec, "UTF-8"),ReportSpecification.class);
+
+			}
+			
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			
+			reportGeneratorService.renderReportPdf(spec, output);
+			String name = "export";
+
+			byte[] doc = output.toByteArray();
+
+			return Response.ok(doc, MediaType.APPLICATION_OCTET_STREAM).header(
+					"content-disposition",
+					"attachment; filename = " + name + ".pdf").header(
+							"content-length",doc.length).build();
+
+		} catch (Exception e) {
+			throw new WebApplicationException(e);
+		}
+	}
 
 	@POST
 	@Produces({ "application/vnd.ms-excel" })
