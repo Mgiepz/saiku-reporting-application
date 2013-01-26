@@ -4,12 +4,18 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+	<bean id="reportingComponent" class="org.saiku.reporting.component.StandaloneReportingComponent" />	
+
 	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
 	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />	
 	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
 	<bean id="memoryBasedMetadataDomainRepository" class="org.saiku.reporting.backend.server.MemoryBasedMetadataDomainRepository" />	
 	<bean id="metadataRepository" class="org.saiku.reporting.backend.server.MetadataRepositoryImpl" />	
-	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService" />	
+	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService">	
+		<property name="reportingComponent" ref="reportingComponent" />
+	</bean>
 	<bean id="cdaService" class="org.saiku.reporting.backend.service.CdaService" />	
+	
+	
 	
 </beans>

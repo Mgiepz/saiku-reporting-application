@@ -19,14 +19,17 @@
  */
 package org.saiku.reporting.backend.server;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.UUID;
 
+import org.apache.commons.vfs.FileContent;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.VFS;
 import org.pentaho.metadata.model.Domain;
 import org.pentaho.metadata.repository.InMemoryMetadataDomainRepository;
 import org.pentaho.metadata.util.XmiParser;
-import org.saiku.reporting.backend.service.SaikuProperties;
 
 public class MemoryBasedMetadataDomainRepository {
 
@@ -42,12 +45,18 @@ public class MemoryBasedMetadataDomainRepository {
     }
 
     private void createDomain() {
-        FileInputStream in = null;
+	
+    	InputStream in = null;
         try {
-            in = new FileInputStream(SaikuProperties.metadataFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            FileSystemManager fsManager = VFS.getManager();
+            FileObject metadata = fsManager.resolveFile("res:metadata.xmi");
+            
+            FileContent fc = metadata.getContent(); 
+            in = fc.getInputStream(); 
+
+        } catch (FileSystemException e) {
+			e.printStackTrace();
+		}
 
         final XmiParser parser = new XmiParser();
         Domain domain = null;

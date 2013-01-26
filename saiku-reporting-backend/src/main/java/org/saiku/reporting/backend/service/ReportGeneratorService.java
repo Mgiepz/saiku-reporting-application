@@ -56,6 +56,7 @@ import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.server.MetadataRepository;
 import org.saiku.reporting.backend.server.SaikuPmdConnectionProvider;
+import org.saiku.reporting.component.IReportingComponent;
 import org.saiku.reporting.component.StandaloneReportingComponent;
 import org.saiku.reporting.core.SaikuReportProcessor;
 import org.saiku.reporting.core.model.FieldDefinition;
@@ -80,8 +81,13 @@ public class ReportGeneratorService {
     private MetadataRepository metadataRepository;
 	
 	private URL repoURL;
+
+	private IReportingComponent reportingComponent;
 	
-    
+	public void setReportingComponent(IReportingComponent reportingComponent) {
+		this.reportingComponent = reportingComponent;
+	}
+
 	private MasterReport prepareReport(ReportSpecification spec) throws SaikuReportingException, ResourceLoadingException, ResourceCreationException, ResourceKeyCreationException, MalformedURLException, ResourceException {
 		
 		 ClassicEngineBoot.getInstance().start();
@@ -196,20 +202,19 @@ public class ReportGeneratorService {
     private void generateHtmlReport(MasterReport output, OutputStream stream,
             Map<String, Object> reportParameters, HtmlReport report, Integer acceptedPage) throws Exception {
 
-        final StandaloneReportingComponent pentahoReportingPlugin = new StandaloneReportingComponent();
-        pentahoReportingPlugin.setReport(output);
-        pentahoReportingPlugin.setPaginateOutput(true);
-        pentahoReportingPlugin.setInputs(reportParameters);
-        pentahoReportingPlugin.setDefaultOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
-        pentahoReportingPlugin.setOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
-        pentahoReportingPlugin.setDashboardMode(true);
-        pentahoReportingPlugin.setOutputStream(stream);
-        pentahoReportingPlugin.setAcceptedPage(acceptedPage);
-        pentahoReportingPlugin.validate();
-        pentahoReportingPlugin.execute();
+        reportingComponent.setReport(output);
+        reportingComponent.setPaginateOutput(true);
+        reportingComponent.setInputs(reportParameters);
+        reportingComponent.setDefaultOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
+        reportingComponent.setOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
+        reportingComponent.setDashboardMode(true);
+        reportingComponent.setOutputStream(stream);
+        reportingComponent.setAcceptedPage(acceptedPage);
+        reportingComponent.validate();
+        reportingComponent.execute();
 
-        report.setCurrentPage(pentahoReportingPlugin.getAcceptedPage());
-        report.setPageCount(pentahoReportingPlugin.getPageCount());
+        report.setCurrentPage(reportingComponent.getAcceptedPage());
+        report.setPageCount(reportingComponent.getPageCount());
 
         //GenerateTest.storeReport(pentahoReportingPlugin.getReport());
 
