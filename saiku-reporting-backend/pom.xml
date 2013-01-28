@@ -14,6 +14,10 @@
 	</properties>
 	<repositories>
 		<repository>
+        	<id>maven-central</id>
+        	<url>http://repo1.maven.org/maven2</url>
+    	</repository>
+		<repository>
 			<id>repo.pentaho.org</id>
 			<name>repo.pentaho.org-releases</name>
 			<url>http://repository.pentaho.org/artifactory/pentaho</url>
