@@ -108,7 +108,7 @@
 		<dependency>
 			<groupId>pt.webdetails</groupId>
 			<artifactId>cda-core</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<version>PRD-TRUNK</version>
 			<exclusions>
 				<exclusion>
 					<groupId>pentaho-reporting-engine</groupId>
