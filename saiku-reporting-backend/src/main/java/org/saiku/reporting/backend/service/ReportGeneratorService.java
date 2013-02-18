@@ -236,7 +236,6 @@ public class ReportGeneratorService {
 	private void generatePdfReport(MasterReport output, OutputStream stream,
             Map<String, Object> reportParameters) throws Exception {
 
-        final StandaloneReportingComponent reportingComponent = new StandaloneReportingComponent();
         reportingComponent.setReport(output);
         reportingComponent.setPaginateOutput(true);
         reportingComponent.setInputs(reportParameters);
@@ -309,19 +308,19 @@ public class ReportGeneratorService {
         
         mql = mql.replace("<![CDATA[", "").replace("]]>", "");
 
-		// and then the calculated columns
-        final Collection<ColumnDefinition> calculatedColumns = new ArrayList<ColumnDefinition>();
-        
-		for (FieldDefinition fieldDefinition : spec.getFieldDefinitions()) {
-			if(fieldDefinition.getFormula()!=null){
-				ColumnDefinition columnDef = new ColumnDefinition();
-				columnDef.setName(fieldDefinition.getId());
-				columnDef.setType(ColumnDefinition.TYPE.CALCULATED_COLUMN);
-				columnDef.setFormula("=" + fieldDefinition.getFormula());
-				calculatedColumns.add(columnDef);
-			}
-		}
-        
+//		// and then the calculated columns
+//        final Collection<ColumnDefinition> calculatedColumns = new ArrayList<ColumnDefinition>();
+//        
+//		for (FieldDefinition fieldDefinition : spec.getFieldDefinitions()) {
+//			if(fieldDefinition.getFormula()!=null){
+//				ColumnDefinition columnDef = new ColumnDefinition();
+//				columnDef.setName(fieldDefinition.getId());
+//				columnDef.setType(ColumnDefinition.TYPE.CALCULATED_COLUMN);
+//				columnDef.setFormula("=" + fieldDefinition.getFormula());
+//				calculatedColumns.add(columnDef);
+//			}
+//		}
+//        
 		String id = spec.getDataSource().getId();
 		CdaSettings cda = new CdaSettings(id, null);
 
@@ -329,7 +328,7 @@ public class ReportGeneratorService {
 		MqlDataAccess dataAccess = new MqlDataAccess(id, id, "1",mql);
 		dataAccess.setParameters(new ArrayList<Parameter>());
 		dataAccess.getColumnDefinitions().clear();
-		dataAccess.getColumnDefinitions().addAll(calculatedColumns);
+		//dataAccess.getColumnDefinitions().addAll(calculatedColumns);
 
 		cda.addConnection(connection);
 		cda.addDataAccess(dataAccess);

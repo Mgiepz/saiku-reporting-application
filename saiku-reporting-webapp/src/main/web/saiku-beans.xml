@@ -9,7 +9,9 @@
 	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
 	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />	
 	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
-	<bean id="memoryBasedMetadataDomainRepository" class="org.saiku.reporting.backend.server.MemoryBasedMetadataDomainRepository" />	
+	<bean id="memoryBasedMetadataDomainRepository" class="org.saiku.reporting.backend.server.MemoryBasedMetadataDomainRepository">
+		<property name="metadataFile"><value>res:metadata.xmi</value></property>
+	</bean>	
 	<bean id="metadataRepository" class="org.saiku.reporting.backend.server.MetadataRepositoryImpl" />	
 	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService">	
 		<property name="reportingComponent" ref="reportingComponent" />

@@ -34,22 +34,30 @@ import org.pentaho.metadata.util.XmiParser;
 public class MemoryBasedMetadataDomainRepository {
 
     InMemoryMetadataDomainRepository immdr;
+    
+    private String metadataFile;
 
     public MemoryBasedMetadataDomainRepository() {
-        immdr = new InMemoryMetadataDomainRepository();
-        createDomain();
-    }
 
+    }
+    
+    public MemoryBasedMetadataDomainRepository(String metadataFile) {
+        createDomain(metadataFile);
+    }
+ 
     public InMemoryMetadataDomainRepository getImmdr() {
     	return immdr;
     }
 
-    private void createDomain() {
-	
+    private void createDomain(String metadataFile) {
+    	
+    	this.metadataFile = metadataFile;
+        immdr = new InMemoryMetadataDomainRepository();
+        
     	InputStream in = null;
         try {
             FileSystemManager fsManager = VFS.getManager();
-            FileObject metadata = fsManager.resolveFile("res:metadata.xmi");
+            FileObject metadata = fsManager.resolveFile(metadataFile);
             
             FileContent fc = metadata.getContent(); 
             in = fc.getInputStream(); 
@@ -70,4 +78,12 @@ public class MemoryBasedMetadataDomainRepository {
 
 
     }
+
+	public String getMetadataFile() {
+		return metadataFile;
+	}
+
+	public void setMetadataFile(String metadataFile) {
+		createDomain(metadataFile);
+	}
 }
