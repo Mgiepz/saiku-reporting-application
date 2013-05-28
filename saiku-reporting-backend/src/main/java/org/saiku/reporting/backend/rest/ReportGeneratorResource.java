@@ -63,6 +63,14 @@ public class ReportGeneratorResource {
 		}
 
 	}
+
+	@POST
+	@Consumes("application/x-www-form-urlencoded")
+	@Produces({"application/json" })
+	@Path("/filtervalues")
+	public String getFilterValues(@FormParam("mql") String mqlQueryString) {
+		return cda.doMqlQuery(mqlQueryString);
+	}
 	
 	@POST
 	@Consumes("application/x-www-form-urlencoded")

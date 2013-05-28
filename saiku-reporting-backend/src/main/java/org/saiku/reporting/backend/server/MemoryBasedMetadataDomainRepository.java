@@ -22,20 +22,22 @@ package org.saiku.reporting.backend.server;
 import java.io.InputStream;
 import java.util.UUID;
 
-import org.apache.commons.vfs.FileContent;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
 import org.pentaho.metadata.model.Domain;
 import org.pentaho.metadata.repository.InMemoryMetadataDomainRepository;
 import org.pentaho.metadata.util.XmiParser;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
+import pt.webdetails.cpf.repository.IRepositoryAccess;
 
 public class MemoryBasedMetadataDomainRepository {
 
     InMemoryMetadataDomainRepository immdr;
     
     private String metadataFile;
+    
+	@Autowired
+	private IRepositoryAccess repositoryAccess;
 
     public MemoryBasedMetadataDomainRepository() {
 
@@ -53,22 +55,15 @@ public class MemoryBasedMetadataDomainRepository {
     	
     	this.metadataFile = metadataFile;
         immdr = new InMemoryMetadataDomainRepository();
-        
-    	InputStream in = null;
-        try {
-            FileSystemManager fsManager = VFS.getManager();
-            FileObject metadata = fsManager.resolveFile(metadataFile);
-            
-            FileContent fc = metadata.getContent(); 
-            in = fc.getInputStream(); 
-
-        } catch (FileSystemException e) {
-			e.printStackTrace();
-		}
 
         final XmiParser parser = new XmiParser();
         Domain domain = null;
+        InputStream in = null;
+        
         try {
+        	
+        	in = repositoryAccess.getResourceInputStream("metadata.xmi", FileAccess.READ);
+        	
             domain = parser.parseXmi(in);
             domain.setId(UUID.randomUUID().toString() + "/" + "metadata.xmi");
             immdr.storeDomain(domain, true);

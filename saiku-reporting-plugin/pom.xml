@@ -12,12 +12,14 @@
 		<maven.compiler.target>1.5</maven.compiler.target>
 		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
 		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
+		<pentaho.platform.version>4.8.0-stable</pentaho.platform.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<jersey.version>1.6</jersey.version>
 		<enunciate.version>1.23</enunciate.version>
 	</properties>
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -31,15 +33,40 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>webdetails</groupId>
-									<artifactId>cda</artifactId>
+									<groupId>org.saiku</groupId>
+									<artifactId>saiku-reporting-core</artifactId>
+									<version>trunk-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.saiku</groupId>
+									<artifactId>saiku-reporting-backend</artifactId>
+									<version>trunk-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>pentaho</groupId>
+									<artifactId>cda-core</artifactId>
+									<version>TRUNK-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
+								</artifactItem>
+								<!-- Do we really need cda-pentaho? -->
+								<artifactItem>
+									<groupId>pentaho</groupId>
+									<artifactId>cda-pentaho</artifactId>
 									<version>TRUNK-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
-									<groupId>pentaho-reporting-engine</groupId>
-									<artifactId>pentaho-reporting-engine-classic-extensions-cda</artifactId>
-									<version>saiku-SNAPSHOT</version>
+									<groupId>pt.webdetails</groupId>
+									<artifactId>cpf-core</artifactId>
+									<version>TRUNK-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>pt.webdetails</groupId>
+									<artifactId>cpf-pentaho</artifactId>
+									<version>TRUNK-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
@@ -50,17 +77,10 @@
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.saiku</groupId>
-									<artifactId>saiku-reporting-ui</artifactId>
-									<version>${project.version}</version>
+									<artifactId>saiku-ui</artifactId>
+									<version>SAIKU-UNITED</version>
 									<type>war</type>
 									<outputDirectory>target/stage</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.saiku</groupId>
-									<artifactId>saiku-reporting-core</artifactId>
-									<version>${project.version}</version>
-									<type>jar</type>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.codehaus.enunciate</groupId>
@@ -152,7 +172,6 @@
 									<version>1.2</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-
 							</artifactItems>
 						</configuration>
 					</execution>
@@ -174,7 +193,7 @@
 							<tasks>
 								<unzip dest="target/dist/saiku-reporting/web/">
 									<fileset dir="target/stage/">
-										<include name="saiku-reporting-ui-${project.version}.war" />
+										<include name="saiku-ui-SAIKU-UNITED.war" />
 									</fileset>
 								</unzip>
 								<copy
@@ -191,7 +210,6 @@
 								<zip destfile="target/saiku-reporting-plugin-${project.version}.zip">
 									<zipfileset dir="target/dist/" />
 								</zip>
-
 							</tasks>
 						</configuration>
 					</execution>
@@ -216,6 +234,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -233,6 +252,14 @@
 		</plugins>
 	</build>
 	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>repo</name>
+			<url>http://repo.analytical-labs.com/repo</url>
+		</repository>
 		<repository>
 			<id>pentaho-repo</id>
 			<name>pentaho repository</name>
@@ -256,102 +283,100 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>central</id>
-			<name>repo</name>
-			<url>http://repo.analytical-labs.com/repo</url>
-		</repository>
 	</repositories>
+
 	<dependencies>
-			<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-core</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
+
 		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<groupId>org.saiku</groupId>
+			<artifactId>saiku-reporting-core</artifactId>
+			<version>trunk-SNAPSHOT</version>
 		</dependency>
+
 		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-cda</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<groupId>org.saiku</groupId>
+			<artifactId>saiku-reporting-backend</artifactId>
+			<version>trunk-SNAPSHOT</version>
 		</dependency>
+
+		<!-- CTOOLS -->
 		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-mondrian</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-olap4j</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-pmd</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-kettle</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-xpath</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-scripting</artifactId>
-			<version>${pentaho.reporting.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-reporting-engine</groupId>
-			<artifactId>pentaho-reporting-engine-classic-extensions-drill-down</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<groupId>pentaho</groupId>
+			<artifactId>cda-core</artifactId>
+			<version>TRUNK-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.webdetails</groupId>
-			<artifactId>cda-core</artifactId>
-			<version>PRD-TRUNK</version>
-			<exclusions>
-				<exclusion>
-					<groupId>pentaho-reporting-engine</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>	
-		<dependency>
-			<groupId>org.codehaus.jettison</groupId>
-			<artifactId>jettison</artifactId>
-			<version>1.2</version>
+			<artifactId>cpf-core</artifactId>
+			<version>TRUNK-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-jaxrs</artifactId>
-			<version>1.8.5</version>
+			<groupId>pt.webdetails</groupId>
+			<artifactId>cpf-pentaho</artifactId>
+			<version>TRUNK-SNAPSHOT</version>
+		</dependency>
+
+
+		<!-- -->
+
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-api</artifactId>
+			<version>${pentaho.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-engine-core</artifactId>
+			<version>${pentaho.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-engine-services</artifactId>
+			<version>${pentaho.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-web-servlet</artifactId>
+			<version>${pentaho.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-util</artifactId>
+			<version>${pentaho.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-plugin-services</artifactId>
+			<version>${pentaho.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-plugin-actions</artifactId>
+			<version>${pentaho.platform.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>pentaho</groupId>
+					<artifactId>pentaho-third-party-security</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-bi-platform-web-servlet</artifactId>
+			<version>${pentaho.platform.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-core-platform-plugin</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<version>${pentaho.platform.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
 					<artifactId>spring</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>pentaho-reporting-engine</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.olap4j</groupId>
@@ -372,52 +397,6 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-api</artifactId>
-			<version>${pentaho.libs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-engine-core</artifactId>
-			<version>${pentaho.libs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-engine-services</artifactId>
-			<version>${pentaho.libs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-web-servlet</artifactId>
-			<version>${pentaho.libs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-util</artifactId>
-			<version>${pentaho.libs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-plugin-services</artifactId>
-			<version>${pentaho.libs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-plugin-actions</artifactId>
-			<version>${pentaho.libs.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>pentaho</groupId>
-					<artifactId>pentaho-third-party-security</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-web-servlet</artifactId>
-			<version>${pentaho.libs.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.enunciate</groupId>
@@ -453,6 +432,11 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>

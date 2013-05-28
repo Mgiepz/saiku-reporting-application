@@ -17,12 +17,12 @@ http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/serv
 
 	<context:annotation-config />
 
-	<bean id="enunciatePluginServlet" class="org.saiku.adhoc.service.EnunciateJerseyPluginServlet">
+	<bean id="enunciatePluginServlet" class="org.saiku.reporting.backend.pho.EnunciateJerseyPluginServlet">
 		<property name="initParams">
 			<map>
 				<entry key="com.sun.jersey.config.property.resourceConfigClass"
 					value="com.sun.jersey.api.core.PackagesResourceConfig" />
-				<entry key="com.sun.jersey.config.property.packages" value="org.saiku.adhoc.rest" />
+				<entry key="com.sun.jersey.config.property.packages" value="org.saiku.reporting.backend.rest" />
 				<entry
 					key="org.codehaus.enunciate.modules.jersey.config.ResourceProviderFactory"
 					value="com.sun.jersey.spi.spring.container.SpringComponentProviderFactory" />
@@ -32,68 +32,14 @@ http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/serv
 		</property>
 	</bean>
 
-	<!-- common -->
-	<bean id="sessionHolder" class="org.saiku.adhoc.model.WorkspaceSessionHolder">
-		<property name="cdaProvider" ref="cdaProvider" />
-		<!--property name="prptProvider" ref="prptProvider" /-->
-		<property name="metadataProvider" ref="metadataProvider" />
-	</bean>
-	<!--bean id="cdaBuilder" class="org.saiku.adhoc.model.builder.CdaBuilder">
-		<property name="metadataProvider" ref="metadataProvider" />
-	</bean-->
-
-	<!-- pentaho -->
-	<bean id="cdaProvider" class="org.saiku.adhoc.providers.impl.pentaho.PentahoCdaProvider">
-		<property name="repositoryHelper" ref="repositoryHelper" />
-	</bean>	
-	<bean id="prptProvider" class="org.saiku.adhoc.providers.impl.pentaho.PentahoPrptProvider">
-	</bean>	
-
-	<bean id="metadataProvider" class="org.saiku.adhoc.providers.impl.pentaho.PentahoMetadataProvider">
-		<property name="repositoryHelper" ref="repositoryHelper" />
-	</bean>		
-	<bean id="repositoryHelper" class="org.saiku.adhoc.service.repository.PentahoRepositoryHelper">
-	</bean>
-	
-	<!-- service -->
-	<bean id="queryService" class="org.saiku.adhoc.service.cda.CdaQueryService">
-		<property name="sessionHolder" ref="sessionHolder" />
-		<property name="metadataProvider" ref="metadataProvider" />
-		<property name="cdaAccessor" ref="cdaAccessor" />
-		<property name="repositoryHelper" ref="repositoryHelper" />
-	</bean>
-		
-	<bean id="cdaAccessor" class="org.saiku.adhoc.service.cda.CdaAccessor">
-		<property name="cdaProvider" ref="cdaProvider" />
-	</bean>
-
-	<bean id="reportGeneratorService" class="org.saiku.adhoc.service.report.ReportGeneratorService">
-	</bean>
-
-	<bean id="exportService" class="org.saiku.adhoc.service.cda.ExportService">
-		<property name="sessionHolder" ref="sessionHolder" />
-		<property name="cdaAccessor" ref="cdaAccessor" />
-		<property name="reportGeneratorService" ref="reportGeneratorService" />
-	</bean>
-
-	<!-- resources -->
-	<bean id="metadataResource" class="org.saiku.adhoc.rest.MetadataDiscoverResource">
-		<property name="metadataProvider" ref="metadataProvider" />
-	</bean>
-
-	<bean id="pentahoRepositoryResource" class="org.saiku.adhoc.rest.PentahoRepositoryResource">
-		<property name="sessionHolder" ref="sessionHolder" />
-		<property name="repositoryHelper" ref="repositoryHelper" />
-	</bean>
-
-	<bean id="queryResource" class="org.saiku.adhoc.rest.QueryResource">
-		<property name="queryService" ref="queryService" />
-		<property name="reportGeneratorService" ref="reportGeneratorService" />
-	</bean>
-
-	<bean id="exportResource" class="org.saiku.adhoc.rest.ExportResource">
-		<property name="exportService" ref="exportService" />
-	</bean>
+	<bean id="repositoryAccess" class="pt.webdetails.cpf.repository.PentahoRepositoryAccess" />	
+	<bean id="reportingComponent" class="org.saiku.reporting.backend.pho.component.ReportingComponentWrapper" /> 
+	<bean id="metadataRepository" class="org.saiku.reporting.backend.pho.PentahoMetadataRepositoryImpl" />
+	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
+	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService" />	
+	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />			
+	<bean id="cdaService" class="org.saiku.reporting.backend.service.CdaService"/>	
+	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
 
 </beans>
 

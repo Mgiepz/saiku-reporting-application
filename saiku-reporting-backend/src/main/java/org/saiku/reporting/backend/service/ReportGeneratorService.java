@@ -20,58 +20,35 @@
 package org.saiku.reporting.backend.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfPageableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
 import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
-import org.pentaho.reporting.engine.classic.extensions.datasources.cda.CdaDataFactory;
-import org.pentaho.reporting.engine.classic.extensions.datasources.cda.CdaQueryEntry;
 import org.pentaho.reporting.engine.classic.extensions.datasources.pmd.PmdDataFactory;
-import org.pentaho.reporting.libraries.resourceloader.Resource;
 import org.pentaho.reporting.libraries.resourceloader.ResourceCreationException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceKeyCreationException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceLoadingException;
-import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
+import org.saiku.reporting.backend.component.IReportingComponent;
 import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.server.MetadataRepository;
 import org.saiku.reporting.backend.server.SaikuPmdConnectionProvider;
-import org.saiku.reporting.component.IReportingComponent;
-import org.saiku.reporting.component.StandaloneReportingComponent;
 import org.saiku.reporting.core.SaikuReportProcessor;
-import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.types.DatasourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import pt.webdetails.cda.connections.Connection;
-import pt.webdetails.cda.connections.metadata.MetadataConnection;
-import pt.webdetails.cda.dataaccess.ColumnDefinition;
-import pt.webdetails.cda.dataaccess.MqlDataAccess;
-import pt.webdetails.cda.dataaccess.Parameter;
-import pt.webdetails.cda.settings.CdaSettings;
 
 public class ReportGeneratorService {
 	
@@ -80,8 +57,9 @@ public class ReportGeneratorService {
 	@Autowired
     private MetadataRepository metadataRepository;
 	
-	private URL repoURL;
-
+	@Autowired
+	private CdaService cdaService;
+	
 	private IReportingComponent reportingComponent;
 	
 	public void setReportingComponent(IReportingComponent reportingComponent) {
@@ -101,7 +79,7 @@ public class ReportGeneratorService {
 	        DatasourceType dsType = spec.getDataSource().getType();
 			
 	        if(DatasourceType.CDA.equals(dsType)){
-	        	generateCdaDatasource(mReport, spec);
+	        	cdaService.generateCdaDatasource(mReport, spec);
 	        }else if(DatasourceType.METADATA.equals(dsType)){
 	        	generatePmdDatasource(mReport, spec);
 	        }
@@ -163,29 +141,23 @@ public class ReportGeneratorService {
 		
 	}
 
-    private MasterReport getPrptTemplate(ReportSpecification spec) throws ResourceLoadingException,
-            ResourceCreationException, ResourceKeyCreationException,
-            MalformedURLException, ResourceException, SaikuReportingException {
+    private MasterReport getPrptTemplate(ReportSpecification spec) throws SaikuReportingException {
+    	
+    		//this should be stored in the ReportSpecification.
+    	    String fileId = "templates/cobalt_4_left_aligned_grid.prpt";
+    	    
+			reportingComponent.setReportFileId(fileId);
 
-        //prptProvider.getPrptTemplate(reportTemplate);
-    	MasterReport mReport = null;
-
-		try {
-	        ResourceManager manager = new ResourceManager();
-	        manager.registerDefaults();
-	        FileSystemManager fsManager = VFS.getManager();
-	        FileObject template;
-			
-			template = fsManager.resolveFile("res:cobalt_4_left_aligned_grid.prpt");
-
-	        Resource res = manager.createDirectly(template.getURL(), MasterReport.class);  //mockup
-	        mReport = (MasterReport) res.getResource();
-	        
-		} catch (FileSystemException e) {
-			throw new SaikuReportingException(e);
-		}
-
-		return mReport;
+			try {
+				return reportingComponent.getReport();
+			} catch (ResourceException e) {
+				//if it cannot be loaded it should try to load a default
+				e.printStackTrace();
+				throw new SaikuReportingException(e);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new SaikuReportingException(e);
+			}
 
     }
 
@@ -219,8 +191,6 @@ public class ReportGeneratorService {
         //GenerateTest.storeReport(pentahoReportingPlugin.getReport());
 
     }
-    
-    
 
     /**
      * Generate the report as pdf
@@ -282,80 +252,6 @@ public class ReportGeneratorService {
         mReport.setQuery("MASTER_QUERY");
 
     }
- 
-    
-    /**
-     * Generate the cda datource for the prpt
-     *
-     * @param sessionId
-     *
-     * @param mReport
-     * @param spec
-     * @throws SaikuReportingException 
-     */
-    @SuppressWarnings("deprecation")
-    private void generateCdaDatasource(MasterReport mReport, ReportSpecification spec) throws SaikuReportingException {
-    	
-    	//First generate the data access and store it to vfs
-        String domainId = "";
-
-        String mql = spec.getDataSource().getProperties().get("queryString");
-        Pattern p = Pattern.compile("<domain_id>(.*?)</domain_id>");
-        Matcher m = p.matcher(mql);
-        if (m.find()) {
-            domainId = m.group(1);
-        }
-        
-        mql = mql.replace("<![CDATA[", "").replace("]]>", "");
-
-//		// and then the calculated columns
-//        final Collection<ColumnDefinition> calculatedColumns = new ArrayList<ColumnDefinition>();
-//        
-//		for (FieldDefinition fieldDefinition : spec.getFieldDefinitions()) {
-//			if(fieldDefinition.getFormula()!=null){
-//				ColumnDefinition columnDef = new ColumnDefinition();
-//				columnDef.setName(fieldDefinition.getId());
-//				columnDef.setType(ColumnDefinition.TYPE.CALCULATED_COLUMN);
-//				columnDef.setFormula("=" + fieldDefinition.getFormula());
-//				calculatedColumns.add(columnDef);
-//			}
-//		}
-//        
-		String id = spec.getDataSource().getId();
-		CdaSettings cda = new CdaSettings(id, null);
-
-		Connection connection = new MetadataConnection("1", domainId , domainId.split("/")[1]);
-		MqlDataAccess dataAccess = new MqlDataAccess(id, id, "1",mql);
-		dataAccess.setParameters(new ArrayList<Parameter>());
-		dataAccess.getColumnDefinitions().clear();
-		//dataAccess.getColumnDefinitions().addAll(calculatedColumns);
-
-		cda.addConnection(connection);
-		cda.addDataAccess(dataAccess);
-
-		storeCda(cda);
-    	
-    	//then generate the cda-extension data factory
-
-        String queryId =  cda.getId(); //"MASTER_QUERY";
-		
-		CdaDataFactory f = new CdaDataFactory();        
-		String baseUrlField = null;
-		f.setBaseUrlField(baseUrlField);
-
-		String baseUrl = "res:saiku-repository/" + cda.getId();
-		f.setUsername(SaikuProperties.cdaUser);
-		f.setPassword(SaikuProperties.cdaPassword);
-		f.setBaseUrl(baseUrl);     
-		f.setUseLocalCall(true);
-		f.setQueryEntry(queryId, new CdaQueryEntry(queryId, queryId));
-
-
-        mReport.setDataFactory(f);
-
-		mReport.setQuery(queryId);
-
-    }    
    
     protected ReportParameterValues getReportParameterValues(
             ReportSpecification model) {
@@ -377,58 +273,6 @@ public class ReportGeneratorService {
 
 	public void setMetadataRepository(MetadataRepository metadataRepository) {
 		this.metadataRepository = metadataRepository;
-	}
-
-	public void storeCda(CdaSettings cda) throws SaikuReportingException {
-		
-		//TODO: wire that with spring
-	 	setPath("res:saiku-repository");
-		
-		try { 
-			String uri = repoURL.toURI().toString() + "/";
-			if (uri != null && cda != null) {
-				uri += cda.getId();
-				File dsFile = new File(new URI(uri));
-				if (dsFile.exists()) {
-					dsFile.delete();
-				}
-				else {
-					dsFile.createNewFile();
-				}
-				FileWriter fw = new FileWriter(dsFile);
-	            fw.write(new String(cda.asXML()));
-				fw.close();
-
-			}
-			else {
-				throw new SaikuReportingException("Cannot save datasource because uri or datasource is null uri(" 
-						+ (uri == null) + ")" );
-			}
-		}
-		catch (Exception e) {
-			throw new SaikuReportingException("Error saving datasource",e);
-		}
-	}
-	
-	public void setPath(String path) {
-
-		FileSystemManager fileSystemManager;
-		try {
-			fileSystemManager = VFS.getManager();
-
-			FileObject fileObject;
-			fileObject = fileSystemManager.resolveFile(path);
-			if (fileObject == null) {
-				throw new IOException("File cannot be resolved: " + path);
-			}
-			if(!fileObject.exists()) {
-				throw new IOException("File does not exist: " + path);
-			}
-			repoURL = fileObject.getURL();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 	
 }

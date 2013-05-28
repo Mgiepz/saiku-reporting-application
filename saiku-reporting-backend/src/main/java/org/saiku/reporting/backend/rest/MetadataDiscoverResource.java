@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Marius Giepz
+ * Copyright (C) 2013 Marius Giepz
  *
  * This program is free software; you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by the Free 
@@ -23,7 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -31,12 +33,16 @@ import javax.ws.rs.core.Context;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.pentaho.di.core.database.DatabaseMeta;
+import org.pentaho.metadata.query.impl.sql.SqlGenerator;
 import org.pentaho.reporting.engine.classic.core.util.PageFormatFactory;
 import org.saiku.reporting.backend.exceptions.MetadataException;
+import org.saiku.reporting.backend.exceptions.SaikuClientException;
 import org.saiku.reporting.backend.objects.dto.ReportTemplate;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModelInfo;
 import org.saiku.reporting.backend.server.MetadataRepository;
+import org.saiku.reporting.core.model.ReportSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -73,6 +79,13 @@ public class MetadataDiscoverResource {
             return new MetadataModelInfo[]{};
         }
     }
+
+//    @GET
+//    @Produces({"application/json"})
+//    @Path("/templates")
+//    public String[] getavailable(){
+//    	return new String[]{"a","b"};
+//    }
 
     @GET
     @Produces({"application/json"})
@@ -114,4 +127,26 @@ public class MetadataDiscoverResource {
         return PageFormatFactory.getInstance().getPageFormats();
 
     }
+    
+	@POST
+	@Produces({"application/json" })
+	@Consumes({"application/json"})
+	public String getQuerySql(ReportSpecification spec){
+
+		try {
+			
+			SqlGenerator sqlgen = new SqlGenerator();
+			DatabaseMeta databaseMeta;
+			//sqlgen.generateSql(query, locale, repo, databaseMeta);
+
+		}catch (Exception e) {
+			log.error("Cannot get sql",e);
+			throw new SaikuClientException(e.getMessage());
+		}
+		return null;
+
+	}
+    
+    
 }
+

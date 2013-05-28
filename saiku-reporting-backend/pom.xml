@@ -9,14 +9,16 @@
 		<spring.version>3.0.3.RELEASE</spring.version>
 		<spring.security.version>3.0.3.RELEASE</spring.security.version>
 		<spring.security.tiger.version>2.0.6.RELEASE</spring.security.tiger.version>
-		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
-		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
+		<!--pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
+		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version-->
+		<pentaho.libs.version>1.2.8</pentaho.libs.version>
+		<pentaho.reporting.version>3.9.2-GA</pentaho.reporting.version>
 	</properties>
 	<repositories>
 		<repository>
-        	<id>maven-central</id>
-        	<url>http://repo1.maven.org/maven2</url>
-    	</repository>
+			<id>maven-central</id>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
 		<repository>
 			<id>repo.pentaho.org</id>
 			<name>repo.pentaho.org-releases</name>
@@ -45,9 +47,25 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<id>central</id>
+			<id>alabs1</id>
 			<name>repo</name>
 			<url>http://repo.analytical-labs.com/repo</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>alabs2</id>
+			<name>repo</name>
+			<url>http://repo.analytical-labs.com/alabs-snapshots</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>alabs3</id>
+			<name>alabs-snapshots-local</name>
+			<url>http://repo.analytical-labs.com/alabs-snapshots-local</url>
 		</repository>
 	</repositories>
 	<build>
@@ -109,17 +127,23 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
 		</dependency>
+
+		<!-- CTOOLS -->
+
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>cda-core</artifactId>
+			<version>TRUNK-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>pt.webdetails</groupId>
-			<artifactId>cda-core</artifactId>
-			<version>PRD-TRUNK</version>
-			<exclusions>
-				<exclusion>
-					<groupId>pentaho-reporting-engine</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>cpf-core</artifactId>
+			<version>TRUNK-SNAPSHOT</version>
 		</dependency>
+
+		<!-- -->
+
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-core</artifactId>
@@ -463,11 +487,11 @@
 			<artifactId>jxl</artifactId>
 			<version>2.6.12</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>commons-vfs</groupId>
 			<artifactId>commons-vfs</artifactId>
 			<version>1.0</version>
-		</dependency>
+		</dependency-->
 	</dependencies>
 
 </project>

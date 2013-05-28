@@ -70,7 +70,7 @@ public class SaikuJndiDatasourceConnectionProvider implements ConnectionProvider
 			}
 
 			DataSource datasource = (DataSource)initContext.lookup(dataSourceName);
-			
+
 			return datasource.getConnection();
 
 		} catch (NamingException e) {
