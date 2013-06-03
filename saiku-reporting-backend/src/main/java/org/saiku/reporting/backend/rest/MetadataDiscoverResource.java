@@ -48,7 +48,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/saiku-adhoc/rest/discover")
+@Path("/reporting/metadata/discover")
 @Scope("request")
 public class MetadataDiscoverResource {
 

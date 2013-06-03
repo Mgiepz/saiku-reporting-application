@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/saiku-adhoc/rest/generator")
+@Path("/reporting/generator")
 @Scope("request")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ReportGeneratorResource {
@@ -46,7 +46,7 @@ public class ReportGeneratorResource {
 	@POST
 	@Produces({"application/json" })
 	@Consumes({"application/json"})
-	@Path("/report/{page}")
+	@Path("/webreport/{page}")
 	public HtmlReport generateReport(ReportSpecification spec,
 			@PathParam("page") String page){
 

@@ -32,6 +32,8 @@ http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/serv
 		</property>
 	</bean>
 
+	<bean id="sessionService" class="org.saiku.reporting.backend.service.AnonymousSessionService"/>
+	<bean id="sessionResource" class="org.saiku.reporting.backend.rest.SessionResource"/>
 	<bean id="repositoryAccess" class="pt.webdetails.cpf.repository.PentahoRepositoryAccess" />	
 	<bean id="reportingComponent" class="org.saiku.reporting.backend.pho.component.ReportingComponentWrapper" /> 
 	<bean id="metadataRepository" class="org.saiku.reporting.backend.pho.PentahoMetadataRepositoryImpl" />
