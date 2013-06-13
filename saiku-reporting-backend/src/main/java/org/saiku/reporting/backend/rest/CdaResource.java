@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/reporting/cda")
+@Path("saiku-reporting/cda")
 @Scope("request")
 public class CdaResource {
 	

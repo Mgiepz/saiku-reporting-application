@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@Path("/saiku-reporting/session")
+@Path("saiku-reporting/session")
 public class SessionResource  {
 
 

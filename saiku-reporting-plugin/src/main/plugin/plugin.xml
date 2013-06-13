@@ -17,11 +17,11 @@
 		</overlay>
 	</overlays>
 
-	<!--content-type type="adhoc" mime-type="text/html">
+	<content-type type="srpt" mime-type="application/zip">
 		<title>Saiku Reporting</title>
 		<description>Saiku Reporting File</description>
 		<icon-url>content/saiku-ui/images/src/saiku_16.png</icon-url>
-		<meta-provider>org.saiku.adhoc.service.AdhocContentTypeMetaProvider</meta-provider>
+		<meta-provider>org.saiku.reporting.backend.pho.SaikuReportingContentTypeMetaProvider</meta-provider>
 		<operations>
 			<operation>
 				<id>RUN</id>
@@ -39,7 +39,7 @@
 				</command>
 			</operation>
 		</operations>
-	</content-type-->
+	</content-type>
 
 	<static-paths>
 		<static-path url="/saiku-reporting/web" localFolder="web" />
@@ -50,6 +50,6 @@
 		<static-path url="/saiku-reporting/web/images" localFolder="web/images" />
 	</static-paths>
 
-	<content-generator id="saiku-reporting" title="fa la la la la, la la la la" type="saiku" class="org.saiku.reporting.backend.pho.ServletAdapterContentGenerator"/>
+	<content-generator id="saiku-reporting" title="fa la la la la, la la la la" type="saiku-reporting" class="org.saiku.reporting.backend.pho.ServletAdapterContentGenerator"/>
 
 </plugin>

@@ -32,15 +32,21 @@ http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/serv
 		</property>
 	</bean>
 
-	<bean id="sessionService" class="org.saiku.reporting.backend.service.AnonymousSessionService"/>
+	<bean id="sessionService" class="org.saiku.reporting.backend.pho.service.PentahoSessionService"/>
+	<bean id="cdaCall" scope="prototype" class="pt.webdetails.cpf.PentahoInterPluginCall"/>
 	<bean id="sessionResource" class="org.saiku.reporting.backend.rest.SessionResource"/>
-	<bean id="repositoryAccess" class="pt.webdetails.cpf.repository.PentahoRepositoryAccess" />	
+	<bean id="repositoryAccess" scope="prototype" class="pt.webdetails.cpf.repository.PentahoRepositoryAccess" />	
 	<bean id="reportingComponent" class="org.saiku.reporting.backend.pho.component.ReportingComponentWrapper" /> 
 	<bean id="metadataRepository" class="org.saiku.reporting.backend.pho.PentahoMetadataRepositoryImpl" />
 	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
-	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService" />	
-	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />			
-	<bean id="cdaService" class="org.saiku.reporting.backend.service.CdaService"/>	
+	<bean id="reportGeneratorService" scope="prototype" class="org.saiku.reporting.backend.service.ReportGeneratorService">
+		<property name="reportingComponent" ref="reportingComponent" />
+	</bean>
+	<bean id="reportGeneratorResource" scope="prototype" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />			
+	<bean id="cdaService" scope="prototype" class="org.saiku.reporting.backend.service.CdaService">	
+			<property name="repositoryAccess" ref="repositoryAccess" />
+			<property name="cdaCall" ref="cdaCall" />
+	</bean>
 	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
 
 </beans>
