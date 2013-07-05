@@ -44,6 +44,7 @@ import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.server.MetadataRepository;
 import org.saiku.reporting.backend.server.SaikuPmdConnectionProvider;
+import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.SaikuReportPreProcessorUtil;
 import org.saiku.reporting.core.SaikuReportProcessor;
 import org.saiku.reporting.core.model.ReportSpecification;
@@ -134,6 +135,9 @@ public class ReportGeneratorService {
 
 		// put the report and the augmented model into the dto
 		String string = stream.toString();
+		
+		if(string==null) ReportModelLogger.log(spec, log);
+		
 		report.setReportModel(spec);
 		report.setData(string);
 

@@ -1,9 +1,6 @@
 package org.saiku.reporting.backend.rest;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import javax.ws.rs.Consumes;
@@ -20,14 +17,15 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.saiku.reporting.backend.exceptions.SaikuClientException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.service.CdaService;
 import org.saiku.reporting.backend.service.ReportGeneratorService;
+import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.model.ReportSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -40,7 +38,7 @@ public class ReportGeneratorResource {
 
 	private static final long serialVersionUID = 1L;
 
-	private Log log = LogFactory.getLog(ReportGeneratorResource.class);
+	private Logger log = LoggerFactory.getLogger(ReportGeneratorResource.class);
 
 	@Autowired
 	private ReportGeneratorService reportGeneratorService;
@@ -65,6 +63,7 @@ public class ReportGeneratorResource {
 			return report;
 
 		}catch (Exception e) {
+
 			log.error("Cannot generate report",e);
 			throw new SaikuClientException(e.getMessage());
 		}
