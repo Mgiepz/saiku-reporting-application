@@ -86,6 +86,7 @@ public class StandaloneReportingComponent implements IReportingComponent
 	@Autowired
 	private IRepositoryAccess repositoryAccess;
 	
+	
 	public MasterReport getReport() throws ResourceException {
 		
 		ResourceManager manager = new ResourceManager();
