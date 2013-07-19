@@ -368,7 +368,7 @@ public class StandaloneReportingComponent implements IReportingComponent
 	@Override
 	public void setReportFileId(Serializable fileId) {
 		// TODO Auto-generated method stub
-		
+		this.fileId = fileId;
 	}
 	@Override
 	public String getMimeType() {
