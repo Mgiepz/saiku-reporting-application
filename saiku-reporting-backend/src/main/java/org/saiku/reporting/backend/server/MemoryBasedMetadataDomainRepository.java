@@ -39,6 +39,9 @@ public class MemoryBasedMetadataDomainRepository {
 	@Autowired
 	private IRepositoryAccess repositoryAccess;
 
+    public void setRepositoryAccess(IRepositoryAccess repo){
+        repositoryAccess = repo;
+    }
     public MemoryBasedMetadataDomainRepository() {
 
     }
