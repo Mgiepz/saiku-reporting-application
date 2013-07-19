@@ -36,7 +36,7 @@ public class MemoryBasedMetadataDomainRepository {
     
     private String metadataFile;
     
-	@Autowired
+	//@Autowired
 	private IRepositoryAccess repositoryAccess;
 
     public void setRepositoryAccess(IRepositoryAccess repo){
