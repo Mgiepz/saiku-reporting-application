@@ -6,7 +6,7 @@
 		<include pattern="pt.webdetails.cda.endpoints.**" />
 	</api-classes>
 	<api-import pattern="org.saiku.reporting.backend.rest.**" />
-	<api-import pattern="pt.webdetails.cda.endpoints.**" />
+	<!--api-import pattern="pt.webdetails.cda.endpoints.**" /-->
 	
 	<!-- api-import pattern="org.saiku.reporting.backend.server.rest.**" /-->
 	<webapp mergeWebXML="src/main/web/web.xml" />
