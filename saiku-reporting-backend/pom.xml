@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cda-core</artifactId>
-			<version>TRUNK-20130716.164056-1</version>
+			<version>TRUNK-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
