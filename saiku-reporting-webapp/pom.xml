@@ -13,7 +13,7 @@
 		<spring.security.tiger.version>2.0.6.RELEASE</spring.security.tiger.version>
 		<enunciate.version>1.23</enunciate.version>
 		<jersey.version>1.8</jersey.version>
-		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
+		<pentaho.reporting.version>3.9.2-GA</pentaho.reporting.version>
 	</properties>
 	
 		<repositories>
