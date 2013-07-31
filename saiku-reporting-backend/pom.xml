@@ -11,8 +11,6 @@
 		<spring.security.tiger.version>2.0.6.RELEASE</spring.security.tiger.version>
 		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
 		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
-		<!--pentaho.libs.version>1.2.8</pentaho.libs.version>
-		pentaho.reporting.version>3.9.2-GA</pentaho.reporting.version-->
 	</properties>
 	<repositories>
 		<repository>
