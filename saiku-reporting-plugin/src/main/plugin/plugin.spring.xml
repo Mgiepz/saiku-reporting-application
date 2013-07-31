@@ -33,8 +33,12 @@ http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/serv
 	</bean>
 
 	<bean id="sessionService" class="org.saiku.reporting.backend.pho.service.PentahoSessionService"/>
+	<bean id="sessionResource" class="org.saiku.reporting.backend.rest.SessionResource">
+	<property name="sessionService" ref="sessionService" />
+	 </bean>
+	 
 	<bean id="cdaCall" scope="prototype" class="pt.webdetails.cpf.PentahoInterPluginCall"/>
-	<bean id="sessionResource" class="org.saiku.reporting.backend.rest.SessionResource"/>
+
 	<bean id="repositoryAccess" scope="prototype" class="pt.webdetails.cpf.repository.PentahoRepositoryAccess" />	
 	<bean id="reportingComponent" class="org.saiku.reporting.backend.pho.component.ReportingComponentWrapper" /> 
 	<bean id="metadataRepository" class="org.saiku.reporting.backend.pho.PentahoMetadataRepositoryImpl" />

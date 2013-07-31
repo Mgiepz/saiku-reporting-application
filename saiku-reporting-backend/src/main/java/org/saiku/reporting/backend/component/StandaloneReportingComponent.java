@@ -42,7 +42,7 @@ import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
  */
 public class StandaloneReportingComponent implements IReportingComponent
 {
-	
+
 	public static final String OUTPUT_TARGET = "output-target"; //$NON-NLS-1$
 	public static final String OUTPUT_TYPE = "output-type"; //$NON-NLS-1$
 	public static final String MIME_TYPE_HTML = "text/html"; //$NON-NLS-1$
@@ -66,7 +66,7 @@ public class StandaloneReportingComponent implements IReportingComponent
 	public static final String PRINTER_NAME = "printer-name"; //$NON-NLS-1$
 	public static final String DASHBOARD_MODE = "dashboard-mode"; //$NON-NLS-1$
 	public static final String PNG_EXPORT_TYPE = "pageable/X-AWT-Graphics;image-type=png";
-	
+
 
 	private static final Log log = LogFactory.getLog(StandaloneReportingComponent.class);
 
@@ -85,21 +85,29 @@ public class StandaloneReportingComponent implements IReportingComponent
 
 	@Autowired
 	private IRepositoryAccess repositoryAccess;
-	
-	
+
+
 	public MasterReport getReport() throws ResourceException {
-		
-		ResourceManager manager = new ResourceManager();
-		manager.registerDefaults();
-		
-		IRepositoryFile resFile = repositoryAccess.getRepositoryFile((String) fileId, FileAccess.READ);
 
-		Resource res = manager.createDirectly(resFile.getData(), MasterReport.class);
+		if(this.report!=null){
+			
+			return report;
+			
+		}else{
 
-		return (MasterReport) res.getResource();
+			ResourceManager manager = new ResourceManager();
+			manager.registerDefaults();
+
+			IRepositoryFile resFile = repositoryAccess.getRepositoryFile((String) fileId, FileAccess.READ);
+
+			Resource res = manager.createDirectly(resFile.getData(), MasterReport.class);
+
+			return (MasterReport) res.getResource();
+
+		}
 
 	}
-	
+
 
 	public String getOutputType() {
 		return outputType;
@@ -353,7 +361,7 @@ public class StandaloneReportingComponent implements IReportingComponent
 	@Override
 	public void setForceDefaultOutputTarget(boolean forceDefaultOutputTarget) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public boolean isForceDefaultOutputTarget() {
@@ -367,9 +375,8 @@ public class StandaloneReportingComponent implements IReportingComponent
 	}
 	@Override
 	public void setReportFileId(Serializable fileId) {
-		// TODO Auto-generated method stub
-		
-	}
+		setFileId((String) fileId);
+	}	
 	@Override
 	public String getMimeType() {
 		// TODO Auto-generated method stub
@@ -383,7 +390,7 @@ public class StandaloneReportingComponent implements IReportingComponent
 	@Override
 	public void setPrint(boolean print) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public String getPrinter() {
@@ -393,11 +400,11 @@ public class StandaloneReportingComponent implements IReportingComponent
 	@Override
 	public void setPrinter(String printer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public String getComputedOutputTarget() throws IOException,
-			ResourceException {
+	ResourceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -405,13 +412,13 @@ public class StandaloneReportingComponent implements IReportingComponent
 	public void applyInputsToReportParameters(MasterReport report,
 			ParameterContext context) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	@Deprecated
 	public ValidationResult applyInputsToReportParameters(
 			ParameterContext context, ValidationResult validationResult)
-			throws IOException, ResourceException {
+					throws IOException, ResourceException {
 		// TODO Auto-generated method stub
 		return null;
 	}

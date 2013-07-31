@@ -93,10 +93,10 @@ public class CdaService {
 		String baseUrlField = null;
 		f.setBaseUrlField(baseUrlField);
 
-		String baseUrl = "saiku:/" + cda.getId();
-		String fileName = cda.getId() + ".cda";
-		String uri = "plugin-samples/cda/" + fileName;
+		String baseUrl = "temporary/cda/" + cda.getId() +".cda";
 		
+		String fileName = cda.getId() + ".cda";
+
 		f.setFile(fileName);
 		f.setPath("cda");
 		f.setSolution("plugin-samples");
@@ -152,7 +152,7 @@ public class CdaService {
     
 	public void storeCda(CdaSettings cda) throws SaikuReportingException {
 		
-		String uri = "plugin-samples/cda/" + cda.getId() +".cda";
+		String uri = "temporary/cda/" + cda.getId() +".cda";
 
 		if(repositoryAccess.canWrite(uri)){
 			try {

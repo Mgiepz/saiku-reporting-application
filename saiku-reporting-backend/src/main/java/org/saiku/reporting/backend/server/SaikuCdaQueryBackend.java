@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
 import org.dom4j.Document;
 import org.dom4j.io.SAXReader;
 import org.pentaho.reporting.engine.classic.core.DataRow;
@@ -28,6 +25,9 @@ import pt.webdetails.cda.CdaEngine;
 import pt.webdetails.cda.discovery.DiscoveryOptions;
 import pt.webdetails.cda.query.QueryOptions;
 import pt.webdetails.cda.settings.CdaSettings;
+import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
+import pt.webdetails.cpf.repository.IRepositoryAccess;
+import pt.webdetails.cpf.repository.IRepositoryFile;
 
 public class SaikuCdaQueryBackend extends CdaQueryBackend{
 
@@ -54,16 +54,21 @@ public class SaikuCdaQueryBackend extends CdaQueryBackend{
 
 		try {
 
-			FileSystemManager fileSystemManager = VFS.getManager();
-			FileObject fileObject = fileSystemManager.resolveFile(baseURL);
-			InputSource inputSource = new InputSource(fileObject.getContent().getInputStream());
+			String uri = "temporary/cda/master.cda";
+			
+			IRepositoryAccess repositoryAccess = (IRepositoryAccess) ApplicationContextHolder.getBean("repositoryAccess");
+			
+			IRepositoryFile cdaFile = repositoryAccess.getRepositoryFile(uri, FileAccess.READ);
+
+			InputSource inputSource = new InputSource(new ByteArrayInputStream(cdaFile.getData()));
+						
 			SAXReader reader = new SAXReader(); 
 			Document cda = reader.read(inputSource);
 
 			cdaSettings = new CdaSettings(cda, MASTER_QUERY, null);
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 
 		final CdaEngine engine = CdaEngine.getInstance();
@@ -161,9 +166,6 @@ public class SaikuCdaQueryBackend extends CdaQueryBackend{
 			}
 
 		}
-
-
-
 
 		final InputStream responseBodyIs = new ByteArrayInputStream(out.toByteArray());
 

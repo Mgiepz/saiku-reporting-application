@@ -45,7 +45,7 @@ public class SessionResource  {
 
 	private static final Logger log = LoggerFactory.getLogger(SessionResource.class);
 
-	@Autowired
+	//@Autowired
 	private ISessionService sessionService;
 
 	public void setSessionService(ISessionService ss) {

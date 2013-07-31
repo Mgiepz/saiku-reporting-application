@@ -6,8 +6,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.saiku.reporting.core.model.Chart;
 import org.saiku.reporting.core.model.DataSource;
 import org.saiku.reporting.core.model.ElementFormat;
@@ -17,10 +15,8 @@ import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.Length;
 import org.saiku.reporting.core.model.LengthUnit;
 import org.saiku.reporting.core.model.PageSetup;
-import org.saiku.reporting.core.model.Parameter;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.RootBandFormat;
-import org.saiku.reporting.core.model.TemplateDefinition;
 import org.slf4j.Logger;
 
 public class ReportModelLogger {
@@ -41,10 +37,10 @@ public class ReportModelLogger {
 					Length.class,
 					LengthUnit.class,
 					PageSetup.class,
-					Parameter.class,
+					//Parameter.class,
 					ReportSpecification.class,
-					RootBandFormat.class,
-					TemplateDefinition.class	
+					RootBandFormat.class
+					//TemplateDefinition.class	
 					);
 
 			Marshaller m = jc.createMarshaller();

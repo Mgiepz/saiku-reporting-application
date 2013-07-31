@@ -3,7 +3,7 @@
 
 	<api-classes>
 		<include pattern="org.saiku.reporting.backend.rest.**" />
-		<include pattern="pt.webdetails.cda.endpoints.**" />
+		<!--include pattern="pt.webdetails.cda.endpoints.**" /-->
 	</api-classes>
 	<api-import pattern="org.saiku.reporting.backend.rest.**" />
 	<!--api-import pattern="pt.webdetails.cda.endpoints.**" /-->
@@ -24,7 +24,7 @@
 		</spring-app>
 		<jersey useSubcontext="true" disableWildcardServletError="false"
 			disabled="false">
-		<init-param name="com.sun.jersey.config.property.packages" value="org.saiku.web" />
+		<init-param name="com.sun.jersey.config.property.packages" value="org.saiku" />
 		<init-param name="com.sun.jersey.spi.container.ContainerRequestFilters" value="com.sun.jersey.api.container.filter.PostReplaceFilter" />
      </jersey>
 		<jaxws disabled="true" />
