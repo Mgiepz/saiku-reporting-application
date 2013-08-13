@@ -33,6 +33,7 @@ import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfPageableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriter;
+import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterException;
 import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
 import org.pentaho.reporting.engine.classic.extensions.datasources.pmd.PmdDataFactory;
 import org.pentaho.reporting.libraries.resourceloader.ResourceCreationException;
@@ -96,7 +97,12 @@ public class ReportGeneratorService {
 			generatePmdDatasource(mReport, spec);
 		}
 
-		SaikuReportPreProcessorUtil.saveReportSpecification(mReport, spec);
+		try {
+			SaikuReportPreProcessorUtil.saveReportSpecification(mReport, spec);
+		} catch (BundleWriterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return saikuProcessor.preProcessReport(mReport, spec);
 	}
