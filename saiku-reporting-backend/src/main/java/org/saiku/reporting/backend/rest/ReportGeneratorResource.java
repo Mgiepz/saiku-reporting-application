@@ -1,7 +1,10 @@
 package org.saiku.reporting.backend.rest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -14,6 +17,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -24,6 +28,7 @@ import org.saiku.reporting.backend.service.CdaService;
 import org.saiku.reporting.backend.service.ReportGeneratorService;
 import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.model.ReportSpecification;
+import org.saiku.reporting.core.model.TemplateDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +113,36 @@ public class ReportGeneratorResource {
 		return Response.ok(doc, MediaType.APPLICATION_JSON).build();
 
 	}
+	
+	/**
+     * Returns the available templates.
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/templates")
+    public List<TemplateDefinition> getReportTemplates() {
+    	String templatesFolder = "system/saiku-reporting/resources/templates";
+    	List<TemplateDefinition> templateList = reportGeneratorService.getTemplatesFromRepository(templatesFolder);
+    	return templateList;
+    }
+	
+    @GET
+    @Produces({"image/png"})
+    @Path("/image/{name}")
+    public Response getImage(@PathParam("name") final String name){
+    	
+    	//final byte[] image = reportGeneratorService.getImg(name);
+    	
+        return Response.ok().entity(new StreamingOutput(){
+            	@Override
+            	public void write(OutputStream output)
+            			throws IOException, WebApplicationException {
+            	//output.write(image);
+                reportGeneratorService.getImg(name, output);
+            	output.flush();
+            }
+        }).build();
+    }	
 	
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
