@@ -18,8 +18,8 @@
 // *
 // */
 //
-//package org.saiku.reporting.backend.util;
-//
+package org.saiku.reporting.backend.util;
+import java.util.Random;
 //import java.util.ArrayList;
 //import java.util.List;
 //
@@ -28,9 +28,18 @@
 //import org.json.JSONTokener;
 //import org.saiku.adhoc.model.master.SaikuColumn;
 //
-//public class StringUtils {
-//	
-//	
+	public class StringUtils {
+	//	
+		public static String randomString20() {
+		char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890".toCharArray();
+		StringBuilder sb = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < 20; i++) {
+		    char c = chars[random.nextInt(chars.length)];
+		    sb.append(c);
+		}
+		return sb.toString();
+	}
 //
 //	public static String getUniqueColumnName(String name, List<SaikuColumn> columns) {
 //
@@ -68,4 +77,4 @@
 //		return finalResult.toString(4); 
 //	}
 //
-//}
+}

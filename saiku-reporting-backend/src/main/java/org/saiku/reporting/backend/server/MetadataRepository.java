@@ -25,7 +25,6 @@ import org.pentaho.metadata.model.Domain;
 import org.pentaho.metadata.model.LogicalModel;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.saiku.reporting.backend.exceptions.MetadataException;
-import org.saiku.reporting.backend.objects.dto.ReportTemplate;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModelInfo;
 
@@ -68,7 +67,7 @@ public interface MetadataRepository {
 	 */
 	public abstract MetadataModel loadModel(String domainId, String modelId);
 
-	public abstract ReportTemplate[] loadTemplates();
+	//public abstract ReportTemplate[] loadTemplates();
 	
 	public abstract IMetadataDomainRepository getMetadataDomainRepository();
 

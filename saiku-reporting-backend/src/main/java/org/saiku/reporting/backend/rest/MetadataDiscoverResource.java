@@ -38,7 +38,6 @@ import org.pentaho.metadata.query.impl.sql.SqlGenerator;
 import org.pentaho.reporting.engine.classic.core.util.PageFormatFactory;
 import org.saiku.reporting.backend.exceptions.MetadataException;
 import org.saiku.reporting.backend.exceptions.SaikuClientException;
-import org.saiku.reporting.backend.objects.dto.ReportTemplate;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModelInfo;
 import org.saiku.reporting.backend.server.MetadataRepository;
@@ -106,16 +105,7 @@ public class MetadataDiscoverResource {
         return null;
     }
 
-    /**
-     * Returns the available templates.
-     */
-    @GET
-    @Produces({"application/json"})
-    @Path("/templates")
-    public ReportTemplate[] getReportTemplates() {
-    	return null;
-    }
-
+        
     /**
      * Returns the available page formats.
      */

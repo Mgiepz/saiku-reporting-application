@@ -8,7 +8,7 @@ import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.pentaho.platform.engine.core.system.PentahoSessionHolder;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
 import org.saiku.reporting.backend.messages.Messages;
-import org.saiku.reporting.backend.objects.dto.ReportTemplate;
+//import org.saiku.reporting.backend.objects.dto.ReportTemplate;
 import org.saiku.reporting.backend.objects.metadata.MetadataDtoMapper;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.saiku.reporting.backend.server.AbstractMetadataRepository;
@@ -65,10 +65,10 @@ public class PentahoMetadataRepositoryImpl extends AbstractMetadataRepository {
 
 	}
 
-	public ReportTemplate[] loadTemplates() {
+	//public ReportTemplate[] loadTemplates() {
 		// TODO Auto-generated method stub
-		return null;
-	}
+	//	return null;
+	//}
 
 	/**
 	 * Returns a instance of the IMetadataDomainRepository for the current
