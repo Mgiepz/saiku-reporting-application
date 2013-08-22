@@ -20,9 +20,14 @@
 package org.saiku.reporting.backend.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,12 +54,16 @@ import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.SaikuReportPreProcessorUtil;
 import org.saiku.reporting.core.SaikuReportProcessor;
 import org.saiku.reporting.core.model.ReportSpecification;
+import org.saiku.reporting.core.model.TemplateDefinition;
 import org.saiku.reporting.core.model.types.DatasourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.io.IOUtils;
 
+import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
 import pt.webdetails.cpf.repository.IRepositoryAccess;
+import pt.webdetails.cpf.repository.IRepositoryFile;
 
 public class ReportGeneratorService {
 
@@ -121,7 +130,7 @@ public class ReportGeneratorService {
 	public void renderReportHtml(ReportSpecification spec, HtmlReport report,
 			Integer acceptedPage) throws ResourceException,
 			MalformedURLException, SaikuReportingException {
-
+		
 		// preprocess the report and augment the spec with all infos from the
 		// template
 		MasterReport output = prepareReport(spec);
@@ -236,6 +245,48 @@ public class ReportGeneratorService {
 		}
 
 	}
+	
+	public List<TemplateDefinition> getTemplatesFromRepository(String path) {
+		IRepositoryFile ab = repositoryAccess.getRepositoryFile("system/saiku-reporting/resources/templates", FileAccess.READ);
+		List<TemplateDefinition> templateList = new ArrayList<TemplateDefinition>();
+		if(ab.isDirectory()){
+			IRepositoryFile[] files = ab.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				IRepositoryFile file = files[i];
+				if(file.getExtension().equals("prpt")){
+					TemplateDefinition thisTemplate = new TemplateDefinition(file.getSolutionPath(),file.getFileName());
+					templateList.add(thisTemplate);
+				};
+			}
+		}
+		return templateList;
+	}
+	
+	public void getImg(String name, OutputStream out){
+		
+		 IRepositoryFile ab = repositoryAccess.getRepositoryFile("system/saiku-reporting/resources/templates", FileAccess.READ);
+			if(ab.isDirectory()){
+				IRepositoryFile[] files = ab.listFiles();
+				for (int i = 0; i < files.length; i++) {
+					IRepositoryFile file = files[i];
+					if(file.getExtension().equals("png") && file.getFileName().equals(name)){
+				        try {
+				        	  InputStream in = repositoryAccess.getResourceInputStream(file.getFullPath());
+				        	  IOUtils.copy(in, out);
+				        	  in.close();
+				         } catch (FileNotFoundException e) {
+				                      System.out.println("File Not Found.");
+				                      e.printStackTrace();
+				         }
+				         catch (IOException e1) {
+				                  System.out.println("Error Reading The File.");
+				                   e1.printStackTrace();
+				         }	
+				      
+					};
+				}
+			}
+	}	
 
 	/**
 	 * Generate report as html

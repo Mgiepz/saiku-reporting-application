@@ -11,6 +11,7 @@ import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.extensions.datasources.cda.CdaDataFactory;
 import org.pentaho.reporting.engine.classic.extensions.datasources.cda.CdaQueryEntry;
 import org.saiku.reporting.backend.exceptions.SaikuReportingException;
+import org.saiku.reporting.backend.util.StringUtils;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ public class CdaService {
 
 	private IPluginCall cdaCall;
 
+	private String cdaName = StringUtils.randomString20();
 
 //	public String doMqlQuery(String mqlQueryString) {
 //		
@@ -173,12 +175,15 @@ public class CdaService {
 	 */
 	public String doMqlQuery(String mqlQueryString) {
 		
+		String uri = SaikuProperties.temporaryPath + cdaName +".cda";
+		
 		try {
-			generateCda("xxx", mqlQueryString);
+		
+			generateCda(cdaName, mqlQueryString);
 
 		    Map<String, Object> params = new HashMap<String, Object>();
-		    params.put("path", "plugin-samples/cda/xxx.cda");
-		    params.put("dataAccessId", "xxx");
+		    params.put("path", uri);
+		    params.put("dataAccessId", cdaName);
 		    params.put("outputType", null);
 		    cdaCall.init(CorePlugin.CDA, "doQuery", params);
     

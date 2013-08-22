@@ -6,7 +6,6 @@ import org.pentaho.metadata.model.Domain;
 import org.pentaho.metadata.model.LogicalModel;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.saiku.reporting.backend.messages.Messages;
-import org.saiku.reporting.backend.objects.dto.ReportTemplate;
 import org.saiku.reporting.backend.objects.metadata.MetadataDtoMapper;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,11 +75,4 @@ public class MetadataRepositoryImpl extends AbstractMetadataRepository {
         return mbr.getImmdr();
 
     }
-
-    public ReportTemplate[] loadTemplates() {
-    	//TODO:
-    	return null;
-
-    }
-
 }
