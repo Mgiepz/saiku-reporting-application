@@ -107,13 +107,10 @@ public class ReportGeneratorService {
 		}
 
 		try {
-			SaikuReportPreProcessorUtil.saveReportSpecification(mReport, spec);
+			return saikuProcessor.preProcessReport(mReport, spec);
 		} catch (BundleWriterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SaikuReportingException(e);
 		}
-
-		return saikuProcessor.preProcessReport(mReport, spec);
 	}
 
 	/**
