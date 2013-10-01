@@ -47,12 +47,12 @@
 								<artifactItem> <groupId>pentaho</groupId> <artifactId>cda</artifactId> 
 									<version>TRUNK-SNAPSHOT</version> <outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
 									</artifactItem>
-								<!--artifactItem>
+								<artifactItem>
 									<groupId>pt.webdetails</groupId>
 									<artifactId>cda-core</artifactId>
 									<version>PRD-TRUNK</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem-->
+								</artifactItem>
 								<artifactItem>
 									<groupId>pt.webdetails</groupId>
 									<artifactId>cpf-core</artifactId>
