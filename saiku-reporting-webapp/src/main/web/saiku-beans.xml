@@ -4,47 +4,42 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+<!--APPLICATION-->
 	<bean id="springApplicationContext" class="org.saiku.reporting.backend.server.ApplicationContextHolder"/>
 
-	<bean id="sessionService" scope="prototype" class="org.saiku.reporting.backend.service.AnonymousSessionService"/>
-
-	<bean id="sessionResource" class="org.saiku.reporting.backend.rest.SessionResource">
-		<property name="sessionService" ref="sessionService" />
-	 </bean>
-	
-    <bean id="repositoryAccess" class="pt.webdetails.cpf.repository.VfsRepositoryAccess">
-        <property name="repository" value="file://c:/tmp/" />
-        <property name="settings" value="file://c:/tmp/" />
-    </bean>
-	
-	<bean id="cdaCall" scope="prototype" class="org.saiku.reporting.backend.service.FakeCdaCall"/>
-
-
-	<bean id="reportingComponent" class="org.saiku.reporting.backend.component.StandaloneReportingComponent"> 
-		<!--property name="repositoryAccess" ref="repositoryAccess"/-->
-	</bean>	
-
-	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource">
-		<!--property name="metadataRepository" ref="metadataRepository" /-->
-	</bean>
-	
-	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />	
-	
-	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
+<!--COMPONENTS-->
 	<bean id="memoryBasedMetadataDomainRepository" class="org.saiku.reporting.backend.server.MemoryBasedMetadataDomainRepository" >
          <property name="metadataFile" value="file://c:/tmp/" />
     </bean>
-	
-	<bean id="metadataRepository" class="org.saiku.reporting.backend.server.MetadataRepositoryImpl" />	
-	
+	<bean id="metadataRepository" class="org.saiku.reporting.backend.server.MetadataRepositoryImpl" />	    
+	<bean id="repositoryAccess" class="pt.webdetails.cpf.repository.VfsRepositoryAccess">
+        <property name="repository" value="file://c:/tmp/" />
+        <property name="settings" value="file://c:/tmp/" />
+    </bean>
+    <bean id="reportingComponent" class="org.saiku.reporting.backend.component.StandaloneReportingComponent"> 
+		<!--property name="repositoryAccess" ref="repositoryAccess"/-->
+	</bean>	
+	<bean id="cdaCall" scope="prototype" class="org.saiku.reporting.backend.service.FakeCdaCall"/>
+
+<!--SERVICES-->
+
+	<bean id="sessionService" scope="prototype" class="org.saiku.reporting.backend.service.AnonymousSessionService"/>
 	<bean id="reportGeneratorService" class="org.saiku.reporting.backend.service.ReportGeneratorService">	
 		<property name="reportingComponent" ref="reportingComponent" />
 	</bean>
-	
-	<bean id="cdaService" class="org.saiku.reporting.backend.service.CdaService">	
+	<bean id="cdaService" class="org.saiku.reporting.backend.service.CdaService">
 		<property name="repositoryAccess" ref="repositoryAccess"/>
 		<property name="cdaCall" ref="cdaCall" />
 	</bean>
-	
-	
+
+<!--REST-->
+	<bean id="sessionResource" class="org.saiku.reporting.backend.rest.SessionResource">
+		<property name="sessionService" ref="sessionService" />
+	 </bean>
+	<bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource">
+		<!--property name="metadataRepository" ref="metadataRepository" /-->
+	</bean>	
+	<bean id="reportGeneratorResource" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />	
+	<bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource" />
+
 </beans>

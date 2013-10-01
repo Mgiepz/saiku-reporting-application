@@ -11,8 +11,8 @@
 		<maven.compiler.source>1.5</maven.compiler.source>
 		<maven.compiler.target>1.5</maven.compiler.target>
 		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
-		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
-		<pentaho.platform.version>4.8.0-stable</pentaho.platform.version>
+		<pentaho.reporting.version>5.0.0</pentaho.reporting.version>
+		<pentaho.platform.version>5.0.0</pentaho.platform.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<jersey.version>1.6</jersey.version>
 		<enunciate.version>1.23</enunciate.version>
@@ -44,37 +44,33 @@
 									<version>trunk-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-								<artifactItem>
-									<groupId>pentaho</groupId>
+								<artifactItem> <groupId>pentaho</groupId> <artifactId>cda</artifactId> 
+									<version>TRUNK-SNAPSHOT</version> <outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
+									</artifactItem>
+								<!--artifactItem>
+									<groupId>pt.webdetails</groupId>
 									<artifactId>cda-core</artifactId>
-									<version>TRUNK-SNAPSHOT</version>
+									<version>PRD-TRUNK</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<!-- Do we really need cda-pentaho? -->
-								<artifactItem>
-									<groupId>pentaho</groupId>
-									<artifactId>cda-pentaho</artifactId>
-									<version>TRUNK-SNAPSHOT</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
+								</artifactItem-->
 								<artifactItem>
 									<groupId>pt.webdetails</groupId>
 									<artifactId>cpf-core</artifactId>
-									<version>TRUNK-SNAPSHOT</version>
+									<version>REFACTOR-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
 									<groupId>pt.webdetails</groupId>
-									<artifactId>cpf-pentaho</artifactId>
-									<version>TRUNK-SNAPSHOT</version>
+									<artifactId>cpf-pentaho5</artifactId>
+									<version>REFACTOR-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-								<artifactItem>
+								<!--artifactItem>
 									<groupId>org.codehaus.jackson</groupId>
 									<artifactId>jackson-jaxrs</artifactId>
 									<version>1.8.5</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
+								</artifactItem-->
 								<artifactItem>
 									<groupId>org.saiku</groupId>
 									<artifactId>saiku-ui</artifactId>
@@ -82,7 +78,7 @@
 									<type>war</type>
 									<outputDirectory>target/stage</outputDirectory>
 								</artifactItem>
-								<artifactItem>
+								<!--artifactItem>
 									<groupId>org.codehaus.enunciate</groupId>
 									<artifactId>enunciate-rt</artifactId>
 									<version>${enunciate.version}</version>
@@ -171,7 +167,7 @@
 									<artifactId>jettison</artifactId>
 									<version>1.2</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
+								</artifactItem-->
 							</artifactItems>
 						</configuration>
 					</execution>
@@ -261,6 +257,14 @@
 			<url>http://repo.analytical-labs.com/repo</url>
 		</repository>
 		<repository>
+			<id>utility</id>
+			<name>utility-releases</name>
+			<url>http://repo.analytical-labs.com/alabs-snapshot-local</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>pentaho-repo</id>
 			<name>pentaho repository</name>
 			<url>http://repository.pentaho.org/artifactory/pentaho</url>
@@ -286,7 +290,7 @@
 	</repositories>
 
 	<dependencies>
-
+		<!-- SAIKU-REPORTING -->
 		<dependency>
 			<groupId>org.saiku</groupId>
 			<artifactId>saiku-reporting-core</artifactId>
@@ -302,69 +306,21 @@
 		<!-- CTOOLS -->
 		<dependency>
 			<groupId>pentaho</groupId>
-			<artifactId>cda-core</artifactId>
+			<artifactId>cda</artifactId>
 			<version>TRUNK-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.webdetails</groupId>
 			<artifactId>cpf-core</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<version>REFACTOR-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.webdetails</groupId>
-			<artifactId>cpf-pentaho</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<artifactId>cpf-pentaho5</artifactId>
+			<version>REFACTOR-SNAPSHOT</version>
 		</dependency>
 
-
-		<!-- -->
-
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-api</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-engine-core</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-engine-services</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-web-servlet</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-util</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-plugin-services</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-plugin-actions</artifactId>
-			<version>${pentaho.platform.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>pentaho</groupId>
-					<artifactId>pentaho-third-party-security</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-bi-platform-web-servlet</artifactId>
-			<version>${pentaho.platform.version}</version>
-		</dependency>
+		<!-- BISERVER -->
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-core-platform-plugin</artifactId>
@@ -374,15 +330,123 @@
 					<groupId>org.springframework</groupId>
 					<artifactId>spring</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>janino</groupId>
+					<artifactId>janino</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-platform-api</artifactId>
+			<version>${pentaho.platform.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-platform-core</artifactId>
+			<version>${pentaho.platform.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>gnujaxp</groupId>
+					<artifactId>gnujaxp</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xmlParserAPIs</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.faces</groupId>
+					<artifactId>jsf-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.xbean</groupId>
+					<artifactId>xbean</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>adaptx</groupId>
+					<artifactId>adaptx</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jvnet.staxex</groupId>
+					<artifactId>stax-ex</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.sourceforge.nekohtml</groupId>
+					<artifactId>nekohtml</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>janino</groupId>
+					<artifactId>janino</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xmlParserAPIs</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xmlParserAPIs</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>secondstring</artifactId>
+					<groupId>secondstring</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-
-
 		<dependency>
-			<groupId>org.olap4j</groupId>
-			<artifactId>olap4j-xmla</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-platform-extensions</artifactId>
+			<version>${pentaho.platform.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.faces</groupId>
+					<artifactId>jsf-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.xbean</groupId>
+					<artifactId>xbean</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>adaptx</groupId>
+					<artifactId>adaptx</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jvnet.staxex</groupId>
+					<artifactId>stax-ex</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.sourceforge.nekohtml</groupId>
+					<artifactId>nekohtml</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>janino</groupId>
+					<artifactId>janino</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xmlParserAPIs</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xmlParserAPIs</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>secondstring</artifactId>
+					<groupId>secondstring</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
+			<artifactId>pentaho-connections</artifactId>
+			<version>${pentaho.platform.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- MISC -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
@@ -398,7 +462,7 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>org.codehaus.enunciate</groupId>
 			<artifactId>enunciate-rt</artifactId>
 			<version>${enunciate.version}</version>
@@ -407,7 +471,7 @@
 			<groupId>org.codehaus.enunciate</groupId>
 			<artifactId>enunciate-jersey-rt</artifactId>
 			<version>${enunciate.version}</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-core</artifactId>

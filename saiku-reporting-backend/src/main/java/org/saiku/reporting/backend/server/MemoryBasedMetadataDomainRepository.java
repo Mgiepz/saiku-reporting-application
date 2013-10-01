@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2013 Marius Giepz
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 /*
  * Copyright (C) 2011 Marius Giepz
  *
@@ -27,8 +42,7 @@ import org.pentaho.metadata.repository.InMemoryMetadataDomainRepository;
 import org.pentaho.metadata.util.XmiParser;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
-import pt.webdetails.cpf.repository.IRepositoryAccess;
+import pt.webdetails.cpf.repository.api.IContentAccessFactory;
 
 public class MemoryBasedMetadataDomainRepository {
 
@@ -36,8 +50,11 @@ public class MemoryBasedMetadataDomainRepository {
     
     private String metadataFile;
     
-	@Autowired
-	private IRepositoryAccess repositoryAccess;
+//	@Autowired
+//	private IRepositoryAccess repositoryAccess;
+	
+//	@Autowired
+	private IContentAccessFactory contentAccessFactory;
 
     public MemoryBasedMetadataDomainRepository() {
 
@@ -61,17 +78,20 @@ public class MemoryBasedMetadataDomainRepository {
         InputStream in = null;
         
         try {
-        	
-        	in = repositoryAccess.getResourceInputStream("metadata.xmi", FileAccess.READ);
-        	
-            domain = parser.parseXmi(in);
-            domain.setId(UUID.randomUUID().toString() + "/" + "metadata.xmi");
-            immdr.storeDomain(domain, true);
+     	
+//        	contentAccessFactory.ge
+//        	
+//        	in = repositoryAccess.getResourceInputStream("metadata.xmi", FileAccess.READ);
+//        	
+//            domain = parser.parseXmi(in);
+//            domain.setId(UUID.randomUUID().toString() + "/" + "metadata.xmi");
+//            immdr.storeDomain(domain, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
+    	throw new RuntimeException("Does not work at the moment!");
+    	
     }
 
 	public String getMetadataFile() {

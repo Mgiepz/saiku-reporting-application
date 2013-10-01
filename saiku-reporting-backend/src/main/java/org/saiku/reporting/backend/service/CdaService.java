@@ -1,5 +1,21 @@
+/*******************************************************************************
+ * Copyright 2013 Marius Giepz
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.saiku.reporting.backend.service;
 
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,122 +40,93 @@ import pt.webdetails.cda.dataaccess.Parameter;
 import pt.webdetails.cda.settings.CdaSettings;
 import pt.webdetails.cpf.IPluginCall;
 import pt.webdetails.cpf.plugin.CorePlugin;
-import pt.webdetails.cpf.repository.IRepositoryAccess;
+import pt.webdetails.cpf.repository.api.IContentAccessFactory;
+import pt.webdetails.cpf.repository.api.IUserContentAccess;
 
-public class CdaService {
-	
+public class CdaService implements ICdaService {
+
 	private URL repoURL;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(CdaService.class);
 
-	private IRepositoryAccess repositoryAccess;
+	@Autowired
+	private IContentAccessFactory contentAccessFactory;
 
 	private IPluginCall cdaCall;
 
 	private String cdaName = StringUtils.randomString20();
 
-//	public String doMqlQuery(String mqlQueryString) {
-//		
-//        String domainId = "";
-//
-//        Pattern p = Pattern.compile("<domain_id>(.*?)</domain_id>");
-//        Matcher m = p.matcher(mqlQueryString);
-//        if (m.find()) {
-//            domainId = m.group(1);
-//        }
-//        
-//       mqlQueryString = mqlQueryString.replace("<![CDATA[", "").replace("]]>", "");
-//
-//		String id = "xxx";
-//		
-//        CdaSettings cda = new CdaSettings(id, null);
-//
-//		Connection connection = new MetadataConnection("1", domainId , domainId.split("/")[1]);
-//
-//		MqlDataAccess dataAccess = new MqlDataAccess(id, id, "1",mqlQueryString);
-//		dataAccess.setParameters(new ArrayList<Parameter>());
-//		dataAccess.getColumnDefinitions().clear();
-//
-//		cda.addConnection(connection);
-//		cda.addDataAccess(dataAccess);
-//
-//		//sstoreCda(cda);
-//	}
-	
-    public void setCdaCall(IPluginCall cdaCall) {
+	/* (non-Javadoc)
+	 * @see org.saiku.reporting.backend.service.ICdaService#setCdaCall(pt.webdetails.cpf.IPluginCall)
+	 */
+	@Override
+	public void setCdaCall(IPluginCall cdaCall) {
 		this.cdaCall = cdaCall;
 	}
 
-	public void setRepositoryAccess(IRepositoryAccess repositoryAccess) {
-		this.repositoryAccess = repositoryAccess;
-	}
+	/* (non-Javadoc)
+	 * @see org.saiku.reporting.backend.service.ICdaService#generateCdaDatasource(org.pentaho.reporting.engine.classic.core.MasterReport, org.saiku.reporting.core.model.ReportSpecification)
+	 */
+	@Override
+	@SuppressWarnings("deprecation")
+	public void generateCdaDatasource(MasterReport mReport, ReportSpecification spec) throws SaikuReportingException {
 
-	/**
-     * Generate the cda datource for the prpt
-     *
-     * @param sessionId
-     *
-     * @param mReport
-     * @param spec
-     * @throws SaikuReportingException 
-     */
-    @SuppressWarnings("deprecation")
-    public void generateCdaDatasource(MasterReport mReport, ReportSpecification spec) throws SaikuReportingException {
+		String mql = spec.getDataSource().getQueryString();
+		CdaSettings cda = generateCda(spec.getDataSource().getId(), mql);
 
-        String mql = spec.getDataSource().getQueryString();
-        CdaSettings cda = generateCda(spec.getDataSource().getId(), mql);
+		String queryId =  cda.getId();
 
-        String queryId =  cda.getId();
-		
 		CdaDataFactory f = new CdaDataFactory();        
 		String baseUrlField = null;
 		f.setBaseUrlField(baseUrlField);
 
 		String baseUrl = "temporary/cda/" + cda.getId() +".cda";
-		
+
 		String fileName = cda.getId() + ".cda";
 
 		f.setFile(fileName);
-		f.setPath("");
-		f.setSolution("tmp");
+		f.setSolution("");
+		f.setPath(SaikuProperties.temporaryPath + cda.getId() +".cda");
 		f.setUsername(SaikuProperties.cdaUser);
 		f.setPassword(SaikuProperties.cdaPassword);
 		f.setBaseUrl(baseUrl);     
 		f.setUseLocalCall(true);
 		f.setQueryEntry(queryId, new CdaQueryEntry(queryId, queryId));
 
-        mReport.setDataFactory(f);
+		mReport.setDataFactory(f);
 		mReport.setQuery(queryId);
 
-    }
+	}
 
 	private CdaSettings generateCda(String id, String mql)
 			throws SaikuReportingException {
 		String domainId = "";        
-        Pattern p = Pattern.compile("<domain_id>(.*?)</domain_id>");
-        Matcher m = p.matcher(mql);
-        if (m.find()) {
-            domainId = m.group(1);
-        }
-        
-        mql = mql.replace("<![CDATA[", "").replace("]]>", "");
+		Pattern p = Pattern.compile("<domain_id>(.*?)</domain_id>");
+		Matcher m = p.matcher(mql);
+		if (m.find()) {
+			domainId = m.group(1);
+		}
 
-//		// and then the calculated columns
-//        final Collection<ColumnDefinition> calculatedColumns = new ArrayList<ColumnDefinition>();
-//        
-//		for (FieldDefinition fieldDefinition : spec.getFieldDefinitions()) {
-//			if(fieldDefinition.getFormula()!=null){
-//				ColumnDefinition columnDef = new ColumnDefinition();
-//				columnDef.setName(fieldDefinition.getId());
-//				columnDef.setType(ColumnDefinition.TYPE.CALCULATED_COLUMN);
-//				columnDef.setFormula("=" + fieldDefinition.getFormula());
-//				calculatedColumns.add(columnDef);
-//			}
-//		}
-//        
+		mql = mql.replace("<![CDATA[", "").replace("]]>", "");
+
+		//		// and then the calculated columns
+		//        final Collection<ColumnDefinition> calculatedColumns = new ArrayList<ColumnDefinition>();
+		//        
+		//		for (FieldDefinition fieldDefinition : spec.getFieldDefinitions()) {
+		//			if(fieldDefinition.getFormula()!=null){
+		//				ColumnDefinition columnDef = new ColumnDefinition();
+		//				columnDef.setName(fieldDefinition.getId());
+		//				columnDef.setType(ColumnDefinition.TYPE.CALCULATED_COLUMN);
+		//				columnDef.setFormula("=" + fieldDefinition.getFormula());
+		//				calculatedColumns.add(columnDef);
+		//			}
+		//		}
+		//        
 		CdaSettings cda = new CdaSettings(id, null);
 
-		Connection connection = new MetadataConnection("1", domainId , domainId.split("/")[1]);
+		String xmiFile ="pentaho2://" + domainId + "/metadata.xmi";
+
+		Connection connection = new MetadataConnection("1", domainId , xmiFile);
 		MqlDataAccess dataAccess = new MqlDataAccess(id, id, "1",mql);
 		dataAccess.setParameters(new ArrayList<Parameter>());
 		dataAccess.getColumnDefinitions().clear();
@@ -151,19 +138,28 @@ public class CdaService {
 		storeCda(cda);
 		return cda;
 	}    
-    
-	public void storeCda(CdaSettings cda) throws SaikuReportingException {
-		
-		String uri = SaikuProperties.temporaryPath + cda.getId() +".cda";
 
-		if(repositoryAccess.canWrite(uri)){
-			try {
-				repositoryAccess.publishFile(uri, new String(cda.asXML()), true);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new SaikuReportingException("Error saving cda datasource", e);		
+	/* (non-Javadoc)
+	 * @see org.saiku.reporting.backend.service.ICdaService#storeCda(pt.webdetails.cda.settings.CdaSettings)
+	 */
+	@Override
+	public void storeCda(CdaSettings cda) throws SaikuReportingException {
+
+		String path = SaikuProperties.temporaryPath + cda.getId() +".cda";
+
+		try{
+
+			IUserContentAccess userAccess = contentAccessFactory.getUserContentAccess("/");
+
+			if(userAccess.saveFile(path, new ByteArrayInputStream(cda.asXML().getBytes()))){
+				log.debug("file '" + path + "' saved ok");
+			}else {
+				log.error("writeFile: failed saving " + path);
+				throw new SaikuReportingException("Error saving cda datasource");
 			}
-		}else{
+
+		}catch(Exception e){
+			e.printStackTrace();
 			throw new SaikuReportingException("Error saving cda datasource");
 		}
 
@@ -173,28 +169,35 @@ public class CdaService {
 	 * Executes an mql query and returns the result in cda-json format.
 	 * Used to feed parameter widgets
 	 */
+	/* (non-Javadoc)
+	 * @see org.saiku.reporting.backend.service.ICdaService#doMqlQuery(java.lang.String)
+	 */
+	@Override
 	public String doMqlQuery(String mqlQueryString) {
-		
-		String uri = SaikuProperties.temporaryPath + cdaName +".cda";
-		
-		try {
-		
-			generateCda(cdaName, mqlQueryString);
 
-		    Map<String, Object> params = new HashMap<String, Object>();
-		    params.put("path", uri);
-		    params.put("dataAccessId", cdaName);
-		    params.put("outputType", null);
-		    cdaCall.init(CorePlugin.CDA, "doQuery", params);
-    
-		    return cdaCall.call(); 
+		String uri = SaikuProperties.temporaryPath + "params" +".cda";
+
+		try {
+
+			//TODO:
+			String tempName = "params";
 			
+			generateCda(tempName, mqlQueryString);
+
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("path", uri);
+			params.put("dataAccessId", tempName);
+			params.put("outputType", null);
+			cdaCall.init(CorePlugin.CDA, "doQueryGet", params);
+
+			return cdaCall.call(); 
+
 		} catch (SaikuReportingException e) {
 			e.printStackTrace();
 		}
 
 		return null;
 	}
-   
-	
+
+
 }

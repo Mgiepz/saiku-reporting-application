@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2013 Marius Giepz
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 /*
  * Copyright (C) 2013 Marius Giepz
  *
@@ -24,6 +39,7 @@ import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,10 +50,16 @@ import javax.ws.rs.core.Context;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.di.core.database.DatabaseMeta;
+import org.pentaho.metadata.model.SqlPhysicalModel;
+import org.pentaho.metadata.query.impl.sql.MappedQuery;
 import org.pentaho.metadata.query.impl.sql.SqlGenerator;
+import org.pentaho.metadata.query.model.Query;
+import org.pentaho.metadata.query.model.util.QueryXmlHelper;
+import org.pentaho.metadata.util.ThinModelConverter;
 import org.pentaho.reporting.engine.classic.core.util.PageFormatFactory;
 import org.saiku.reporting.backend.exceptions.MetadataException;
 import org.saiku.reporting.backend.exceptions.SaikuClientException;
+import org.saiku.reporting.backend.objects.dto.SqlString;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModelInfo;
 import org.saiku.reporting.backend.server.MetadataRepository;
@@ -47,7 +69,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("saiku-reporting/metadata/discover")
+@Path("saiku-reporting/api/metadata/discover")
 @Scope("request")
 public class MetadataDiscoverResource {
 
@@ -117,23 +139,31 @@ public class MetadataDiscoverResource {
         return PageFormatFactory.getInstance().getPageFormats();
 
     }
-    
+
 	@POST
 	@Produces({"application/json" })
 	@Consumes({"application/json"})
-	public String getQuerySql(ReportSpecification spec){
+	@Path("/sql")
+	public SqlString getQuerySql(String mqlQueryString) {
 
 		try {
 			
+			QueryXmlHelper queryXmlHelper = new QueryXmlHelper();
+			Query query = queryXmlHelper.fromXML(metadataRepository.getMetadataDomainRepository(), mqlQueryString);
+			
+		    SqlPhysicalModel sqlModel = (SqlPhysicalModel) query.getLogicalModel().getPhysicalModel();
+		    DatabaseMeta databaseMeta = ThinModelConverter.convertToLegacy(sqlModel.getId(), sqlModel.getDatasource());
+			
 			SqlGenerator sqlgen = new SqlGenerator();
-			DatabaseMeta databaseMeta;
-			//sqlgen.generateSql(query, locale, repo, databaseMeta);
 
+			MappedQuery mappedQuery = sqlgen.generateSql(query, "en", metadataRepository.getMetadataDomainRepository(), databaseMeta);
+			
+			return new SqlString(mappedQuery.getQuery());
+			
 		}catch (Exception e) {
 			log.error("Cannot get sql",e);
 			throw new SaikuClientException(e.getMessage());
 		}
-		return null;
 
 	}
     

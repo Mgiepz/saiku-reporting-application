@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2013 Marius Giepz
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 /*
  * Copyright (C) 2011 Marius Giepz
  *
@@ -19,9 +34,8 @@
  */
 package org.saiku.reporting.backend.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,6 +46,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -50,6 +65,7 @@ import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.server.MetadataRepository;
 import org.saiku.reporting.backend.server.SaikuPmdConnectionProvider;
+import org.saiku.reporting.backend.util.GenericBasicFileFilter;
 import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.SaikuReportPreProcessorUtil;
 import org.saiku.reporting.core.SaikuReportProcessor;
@@ -59,11 +75,12 @@ import org.saiku.reporting.core.model.types.DatasourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.commons.io.IOUtils;
 
-import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
-import pt.webdetails.cpf.repository.IRepositoryAccess;
-import pt.webdetails.cpf.repository.IRepositoryFile;
+import pt.webdetails.cpf.repository.api.FileAccess;
+import pt.webdetails.cpf.repository.api.IBasicFile;
+import pt.webdetails.cpf.repository.api.IContentAccessFactory;
+import pt.webdetails.cpf.repository.api.IReadAccess;
+import pt.webdetails.cpf.repository.api.IUserContentAccess;
 
 public class ReportGeneratorService {
 
@@ -74,12 +91,12 @@ public class ReportGeneratorService {
 	private MetadataRepository metadataRepository;
 
 	@Autowired
-	private CdaService cdaService;
-
-	@Autowired
-	private IRepositoryAccess repositoryAccess;
+	private ICdaService cdaService;
 
 	private IReportingComponent reportingComponent;
+
+	@Autowired
+	private IContentAccessFactory contentAccessFactory;
 
 	public void setReportingComponent(IReportingComponent reportingComponent) {
 		this.reportingComponent = reportingComponent;
@@ -127,14 +144,14 @@ public class ReportGeneratorService {
 	public void renderReportHtml(ReportSpecification spec, HtmlReport report,
 			Integer acceptedPage) throws ResourceException,
 			MalformedURLException, SaikuReportingException {
-		
+
 		// preprocess the report and augment the spec with all infos from the
 		// template
 		MasterReport output = prepareReport(spec);
 
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		Map<String, Object> reportParameters = null; // ParamUtils.getReportParameters("",
-														// spec);
+		// spec);
 
 		try {
 			// let the engine process the report
@@ -147,9 +164,9 @@ public class ReportGeneratorService {
 
 		// put the report and the augmented model into the dto
 		String string = stream.toString();
-		
+
 		if(string==null) ReportModelLogger.log(spec, log);
-		
+
 		report.setReportModel(spec);
 		report.setData(string);
 
@@ -158,47 +175,29 @@ public class ReportGeneratorService {
 	public void saveReport(String path, ReportSpecification spec)
 			throws SaikuReportingException {
 
-		try {
+		try{
+
 			MasterReport output = prepareReport(spec);
 
-			if (repositoryAccess.canWrite(path)) {
-				try {
-					final ByteArrayOutputStream prptContent = new ByteArrayOutputStream();
+			IUserContentAccess userAccess = contentAccessFactory.getUserContentAccess("/");
 
-					BundleWriter.writeReportToZipStream(output, prptContent);
+			final ByteArrayOutputStream prptContent = new ByteArrayOutputStream();
 
-					repositoryAccess.publishFile(path,
-							prptContent.toByteArray(), true);
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw new SaikuReportingException("Error saving srpt", e);
-				}
-			} else {
-				throw new SaikuReportingException("Error saving srpt");
+			BundleWriter.writeReportToZipStream(output, prptContent);
+
+			if(userAccess.saveFile(path, new ByteArrayInputStream(prptContent.toByteArray()))){
+				log.debug("file '" + path + "' saved ok");
+			}else {
+				log.error("writeFile: failed saving " + path);
+				throw new SaikuReportingException("Error saving cda datasource");
 			}
 
-		} catch (Exception e) {
+		}catch(Exception e){
 			e.printStackTrace();
-			throw new SaikuReportingException(e);
+			throw new SaikuReportingException("Error saving srpt");
 		}
 
 	}
-	
-	public ReportSpecification loadReport(String file) {
-
-		reportingComponent.setReportFileId(file);
-
-	    try {
-			MasterReport reportBundle = reportingComponent.getReport();
-			ReportSpecification reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(reportBundle, reportBundle.getResourceManager());
-			return reportSpecification;
-	    } catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-			 
-	}
-	
 
 	public void renderReportPdf(ReportSpecification spec,
 			ByteArrayOutputStream stream) throws ResourceLoadingException,
@@ -210,7 +209,7 @@ public class ReportGeneratorService {
 		MasterReport output = prepareReport(spec);
 
 		Map<String, Object> reportParameters = null; // ParamUtils.getReportParameters("",
-														// spec);
+		// spec);
 
 		try {
 			// let the engine process the report
@@ -225,12 +224,14 @@ public class ReportGeneratorService {
 	private MasterReport getPrptTemplate(ReportSpecification spec)
 			throws SaikuReportingException {
 
-		// this should be stored in the ReportSpecification.
-		String fileId = "templates/cobalt_4_left_aligned_grid.prpt";
+		String path = "resources/templates/cobalt_4_left_aligned_grid.prpt";
 
-		reportingComponent.setReportFileId(fileId);
+		IReadAccess access = contentAccessFactory.getPluginSystemReader(null);
 
 		try {
+			InputStream is = access.getFileInputStream(path);
+			reportingComponent.setReportDefinitionInputStream(is);
+
 			return reportingComponent.getReport();
 		} catch (ResourceException e) {
 			// if it cannot be loaded it should try to load a default
@@ -243,46 +244,66 @@ public class ReportGeneratorService {
 
 	}
 	
-	public List<TemplateDefinition> getTemplatesFromRepository(String path) {
-		IRepositoryFile ab = repositoryAccess.getRepositoryFile("system/saiku-reporting/resources/templates", FileAccess.READ);
-		List<TemplateDefinition> templateList = new ArrayList<TemplateDefinition>();
-		if(ab.isDirectory()){
-			IRepositoryFile[] files = ab.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				IRepositoryFile file = files[i];
-				if(file.getExtension().equals("prpt")){
-					TemplateDefinition thisTemplate = new TemplateDefinition(file.getSolutionPath(),file.getFileName());
-					templateList.add(thisTemplate);
-				};
-			}
-		}
-		return templateList;
-	}
-	
-	public void getImg(String name, OutputStream out){
+
+	public ReportSpecification loadReport(String path) {
+
+		IUserContentAccess userAccess = contentAccessFactory.getUserContentAccess(null);
 		
-		 IRepositoryFile ab = repositoryAccess.getRepositoryFile("system/saiku-reporting/resources/templates", FileAccess.READ);
-			if(ab.isDirectory()){
-				IRepositoryFile[] files = ab.listFiles();
-				for (int i = 0; i < files.length; i++) {
-					IRepositoryFile file = files[i];
-					if(file.getExtension().equals("png") && file.getFileName().equals(name)){
-				        try {
-				        	  InputStream in = repositoryAccess.getResourceInputStream(file.getFullPath());
-				        	  IOUtils.copy(in, out);
-				        	  in.close();
-				         } catch (FileNotFoundException e) {
-				                      System.out.println("File Not Found.");
-				                      e.printStackTrace();
-				         }
-				         catch (IOException e1) {
-				                  System.out.println("Error Reading The File.");
-				                   e1.printStackTrace();
-				         }	
-				      
-					};
-				}
-			}
+		try {
+			InputStream is = userAccess.getFileInputStream(path);
+			reportingComponent.setReportDefinitionInputStream(is);
+
+			MasterReport reportBundle = reportingComponent.getReport();
+			
+			ReportSpecification reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(reportBundle, reportBundle.getResourceManager());
+			return reportSpecification;
+			
+		} catch (Exception e) {
+			// if it cannot be loaded it should try to load a default
+			e.printStackTrace();
+			log.error("loadReport: failed loading " + path);
+		}
+		return null;
+
+	}
+
+
+	public List<TemplateDefinition> getTemplatesFromRepository(String path) {
+
+		path = "resources/templates";
+
+		List<TemplateDefinition> templateList = new ArrayList<TemplateDefinition>();
+
+		IReadAccess access = contentAccessFactory.getPluginSystemReader(null);
+
+		GenericBasicFileFilter fileFilter = new GenericBasicFileFilter(null, "prpt");
+
+		List<IBasicFile> fileList = access.listFiles(path, fileFilter, IReadAccess.DEPTH_ALL); 
+
+		for (IBasicFile file : fileList) {
+			TemplateDefinition thisTemplate = new TemplateDefinition(file.getFullPath(),file.getName());
+			templateList.add(thisTemplate);
+		}
+
+		return templateList;
+
+	}
+
+	public void getImg(String name, OutputStream out){
+
+		String path = "resources/templates";
+
+		IReadAccess access = contentAccessFactory.getPluginSystemReader(null);
+
+		try {
+			InputStream image = access.getFileInputStream(path + "/" + name + ".png");
+			IOUtils.copy(image, out);
+
+		} catch (IOException e) {
+			log.info("image " + name + ".png not found");
+			e.printStackTrace();
+		}
+
 	}	
 
 	/**
@@ -303,9 +324,9 @@ public class ReportGeneratorService {
 		reportingComponent.setPaginateOutput(true);
 		reportingComponent.setInputs(reportParameters);
 		reportingComponent
-				.setDefaultOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
+		.setDefaultOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
 		reportingComponent
-				.setOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
+		.setOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
 		reportingComponent.setDashboardMode(true);
 		reportingComponent.setOutputStream(stream);
 		reportingComponent.setAcceptedPage(acceptedPage);
@@ -337,7 +358,7 @@ public class ReportGeneratorService {
 		reportingComponent.setPaginateOutput(true);
 		reportingComponent.setInputs(reportParameters);
 		reportingComponent
-				.setDefaultOutputTarget(PdfPageableModule.PDF_EXPORT_TYPE);
+		.setDefaultOutputTarget(PdfPageableModule.PDF_EXPORT_TYPE);
 		reportingComponent.setOutputTarget(PdfPageableModule.PDF_EXPORT_TYPE);
 		reportingComponent.setOutputStream(stream);
 		reportingComponent.validate();

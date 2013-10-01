@@ -1,45 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin title='Saiku-Reporting' loader="OVERRIDING">
+<plugin name="saiku-reporting" title="saiku-reporting" loader="DEFAULT">
 
-	<menu-items>
-		<menu-item id="new-saiku-report" anchor="file-new-submenu" label="Saiku Reporting" command="content/saiku-reporting/web/index.html" type="MENU_ITEM" how="LAST_CHILD" />
-	</menu-items>
-	
-		<overlays>
-		<overlay id="startup.saikuReporting" resourcebundle="../content/saiku-reporting/web/saiku-adhoc.properties">
-			<overlay id="startup.saikuReporting">
-				<toolbar id="mainToolbar">
-					<toolbarbutton id="openAdhoc" image="../content/saiku-reporting/web/images/src/adhoc_32.png"
-						onclick="mainToolbarHandler.openUrl('Saiku Reporting','Saiku Reporting','content/saiku-reporting/web/index.html?biplugin=true')"
-						tooltiptext="Saiku Reporting" insertafter="newAnalysisButton" />
-				</toolbar>
-			</overlay>
-		</overlay>
-	</overlays>
+  <overlays>
+    <overlay id="startup.saikuReporting"  resourcebundle="content/saiku-reporting/web/saiku-adhoc.properties" priority="1">
+  		<menubar id="newmenu">
+  			<menuitem id="new-saiku-report" label="Saiku Report" command="mantleXulHandler.openUrl('Saiku Reporting','Saiku Reporting','content/saiku-reporting/web/index.html?biplugin=true')" />		
+  			<menuitem id="new-saiku-crosstab-report" label="Saiku Crosstab-Report" command="mantleXulHandler.openUrl('Saiku Reporting','Saiku Reporting','content/saiku-reporting/web/index.html?biplugin=true&amp;mode=crosstab')" />		
+  		</menubar>				
+    </overlay>
+  </overlays>
 
-	<content-type type="srpt" mime-type="application/zip">
+    <content-types>
+    	<content-type mime-type="application/zip" type="srpt">
 		<title>Saiku Reporting</title>
 		<description>Saiku Reporting File</description>
 		<icon-url>content/saiku-ui/images/src/saiku_16.png</icon-url>
-		<meta-provider>org.saiku.reporting.backend.pho.SaikuReportingContentTypeMetaProvider</meta-provider>
-		<operations>
-			<operation>
-				<id>RUN</id>
-				<command>content/saiku-reporting/web/index.html?solution={solution}&amp;path={path}&amp;action={name}&amp;biplugin=true#query/open/{name}
-				</command>
-			</operation>
-			<operation>
-				<id>EDIT</id>
-				<command>content/saiku-reporting/web/index.html?solution={solution}&amp;path={path}&amp;action={name}&amp;biplugin=true#query/open/{name}
-				</command>
-			</operation>
-			<operation>
-				<id>NEWWINDOW</id>
-				<command>content/saiku-reporting/web/index.html?solution={solution}&amp;path={path}&amp;action={name}&amp;biplugin=true#query/open/{name}
-				</command>
-			</operation>
-		</operations>
-	</content-type>
+			<operations>
+				<operation>
+					<id>EDIT</id>
+					<perspective>editor</perspective>
+				</operation>
+			</operations>
+        </content-type>
+    </content-types>
+
 
 	<static-paths>
 		<static-path url="/saiku-reporting/web" localFolder="web" />
@@ -50,6 +34,6 @@
 		<static-path url="/saiku-reporting/web/images" localFolder="web/images" />
 	</static-paths>
 
-	<content-generator id="saiku-reporting" title="fa la la la la, la la la la" type="saiku-reporting" class="org.saiku.reporting.backend.pho.ServletAdapterContentGenerator"/>
+	<!--content-generator id="saiku-reporting" title="fa la la la la, la la la la" type="saiku-reporting" class="org.saiku.reporting.backend.pho.ServletAdapterContentGenerator"/-->
 
 </plugin>
