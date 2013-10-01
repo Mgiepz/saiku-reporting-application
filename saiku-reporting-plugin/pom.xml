@@ -8,8 +8,8 @@
 	<name>saiku reporting biserver plugin</name>
 
 	<properties>
-		<maven.compiler.source>1.5</maven.compiler.source>
-		<maven.compiler.target>1.5</maven.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
 		<pentaho.reporting.version>5.0.0</pentaho.reporting.version>
 		<pentaho.platform.version>5.0.0</pentaho.platform.version>
