@@ -187,7 +187,7 @@ public class CdaService implements ICdaService {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("path", uri);
 			params.put("dataAccessId", tempName);
-			params.put("outputType", null);
+			params.put("outputType", "Json");
 			cdaCall.init(CorePlugin.CDA, "doQueryGet", params);
 
 			return cdaCall.call(); 
