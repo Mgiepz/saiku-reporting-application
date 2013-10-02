@@ -63,7 +63,7 @@ public class SaikuProperties extends Properties{
 
 
 
-	private static final String SAIKU_PROPERTIES = "saiku-adhoc.properties";
+	private static final String SAIKU_PROPERTIES = "saiku-reporting.properties";
 
 	/**
 	 * Returns the singleton.
@@ -193,7 +193,7 @@ public class SaikuProperties extends Properties{
 			load(new UrlPropertySource(url));
 		} else {
 			log.warn(
-					"saiku-adhoc.properties can't be found under '"
+					"saiku-reporting.properties can't be found under '"
 							+ new File(".").getAbsolutePath() + "' or classloader");
 		}
 
@@ -204,7 +204,7 @@ public class SaikuProperties extends Properties{
 		{
 			String key = (String) keys.nextElement();
 			String value = System.getProperty(key);
-			if (key.startsWith("saiku-adhoc.")) {
+			if (key.startsWith("saiku-reporting.")) {
 				if (log.isDebugEnabled()) {
 					log.debug("System property : populate: key=" + key + ", value=" + value);
 				}
@@ -252,28 +252,26 @@ public class SaikuProperties extends Properties{
 	//            return PentahoSystem.getApplicationContext().getFullyQualifiedServerURL();
 	//        }
 	//        else{
-	//            return  getPropString("saiku-adhoc.baseurl","http://localhost:8080/saiku-adhoc-webapp/rest/saiku-adhoc");
+	//            return  getPropString("saiku-reporting.baseurl","http://localhost:8080/saiku-reporting-webapp/rest/saiku-reporting");
 	//        }
 	//
 	//    }
 
 	private static String setupBaseURL(){
 
-		return "http://localhost:8080/saiku-reporting-webapp/rest/saiku-adhoc";
+		return "http://localhost:8080/saiku-reporting-webapp/rest/saiku-reporting";
 
 	}
 
-	public static final String defaultPrptTemplate = getPropString("saiku-adhoc.default.template","jade_4_left_aligned_grid");
+	public static final String defaultPrptTemplate = getPropString("saiku-reporting.default.template","saiku_default.prpt");
 
-	public static final String cdaUser = getPropString("saiku-adhoc.cda.user","joe");
+	public static final String cdaPassword = getPropString("saiku-reporting.cda.password","password");
 
-	public static final String cdaPassword = getPropString("saiku-adhoc.cda.password","password");
+	public static final String metadataFile = getPropString("saiku-reporting.metadata.file","/metadata.xmi");
 
-	public static final String metadataFile = getPropString("saiku-adhoc.metadata.file","/metadata.xmi");
+	public static String temporaryPath = getPropString("saiku-reporting.temp.path","/public/tmp/");
 
-	public static String temporaryPath = getPropString("saiku-adhoc.temp.path","tmp");
-
-	public static String temporarySolution = getPropString("saiku-adhoc.temp.solution","system");
+	public static String temporarySolution = getPropString("saiku-reporting.temp.solution","system");
 
 	private static Boolean getPropBoolean(String key, String defaultValue) {
 		Boolean ret;

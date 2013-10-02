@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.extensions.datasources.cda.CdaDataFactory;
 import org.pentaho.reporting.engine.classic.extensions.datasources.cda.CdaQueryEntry;
@@ -71,7 +72,7 @@ public class CdaService implements ICdaService {
 	@SuppressWarnings("deprecation")
 	public void generateCdaDatasource(MasterReport mReport, ReportSpecification spec) throws SaikuReportingException {
 
-		String mql = spec.getDataSource().getQueryString();
+		String mql = StringEscapeUtils.unescapeHtml(spec.getDataSource().getQueryString());
 		CdaSettings cda = generateCda(spec.getDataSource().getId(), mql);
 
 		String queryId =  cda.getId();
@@ -87,8 +88,8 @@ public class CdaService implements ICdaService {
 		f.setFile(fileName);
 		f.setSolution("");
 		f.setPath(SaikuProperties.temporaryPath + cda.getId() +".cda");
-		f.setUsername(SaikuProperties.cdaUser);
-		f.setPassword(SaikuProperties.cdaPassword);
+//		f.setUsername(SaikuProperties.cdaUser);
+//		f.setPassword(SaikuProperties.cdaPassword);
 		f.setBaseUrl(baseUrl);     
 		f.setUseLocalCall(true);
 		f.setQueryEntry(queryId, new CdaQueryEntry(queryId, queryId));
@@ -175,18 +176,18 @@ public class CdaService implements ICdaService {
 	@Override
 	public String doMqlQuery(String mqlQueryString) {
 
-		String uri = SaikuProperties.temporaryPath + "params" +".cda";
+		String uri = SaikuProperties.temporaryPath + cdaName +".cda";
 
 		try {
 
 			//TODO:
-			String tempName = "params";
+			//String tempName = "params";
 			
-			generateCda(tempName, mqlQueryString);
+			generateCda(cdaName, mqlQueryString);
 
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("path", uri);
-			params.put("dataAccessId", tempName);
+			params.put("dataAccessId", cdaName);
 			params.put("outputType", "Json");
 			cdaCall.init(CorePlugin.CDA, "doQueryGet", params);
 

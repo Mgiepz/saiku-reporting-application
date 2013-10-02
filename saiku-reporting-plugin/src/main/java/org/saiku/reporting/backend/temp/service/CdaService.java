@@ -91,8 +91,8 @@ public class CdaService implements ICdaService {
 		f.setFile(fileName);
 		f.setSolution("");
 		f.setPath(SaikuProperties.temporaryPath + cda.getId() +".cda");
-		f.setUsername(SaikuProperties.cdaUser);
-		f.setPassword(SaikuProperties.cdaPassword);
+//		f.setUsername(SaikuProperties.cdaUser);
+//		f.setPassword(SaikuProperties.cdaPassword);
 		f.setBaseUrl(baseUrl);     
 		f.setUseLocalCall(true);
 		f.setQueryEntry(queryId, new CdaQueryEntry(queryId, queryId));

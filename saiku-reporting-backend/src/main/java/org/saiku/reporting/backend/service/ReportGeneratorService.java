@@ -65,7 +65,7 @@ import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.server.MetadataRepository;
 import org.saiku.reporting.backend.server.SaikuPmdConnectionProvider;
-import org.saiku.reporting.backend.util.GenericBasicFileFilter;
+import org.saiku.reporting.backend.util.FileExtensionFilter;
 import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.SaikuReportPreProcessorUtil;
 import org.saiku.reporting.core.SaikuReportProcessor;
@@ -76,7 +76,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import pt.webdetails.cpf.repository.api.FileAccess;
 import pt.webdetails.cpf.repository.api.IBasicFile;
 import pt.webdetails.cpf.repository.api.IContentAccessFactory;
 import pt.webdetails.cpf.repository.api.IReadAccess;
@@ -224,7 +223,7 @@ public class ReportGeneratorService {
 	private MasterReport getPrptTemplate(ReportSpecification spec)
 			throws SaikuReportingException {
 
-		String path = "resources/templates/cobalt_4_left_aligned_grid.prpt";
+		String path = "resources/templates/" + SaikuProperties.defaultPrptTemplate;
 
 		IReadAccess access = contentAccessFactory.getPluginSystemReader(null);
 
@@ -276,9 +275,7 @@ public class ReportGeneratorService {
 
 		IReadAccess access = contentAccessFactory.getPluginSystemReader(null);
 
-		GenericBasicFileFilter fileFilter = new GenericBasicFileFilter(null, "prpt");
-
-		List<IBasicFile> fileList = access.listFiles(path, fileFilter, IReadAccess.DEPTH_ALL); 
+		List<IBasicFile> fileList = access.listFiles(path, new FileExtensionFilter(new String[] {".prpt"})); 
 
 		for (IBasicFile file : fileList) {
 			TemplateDefinition thisTemplate = new TemplateDefinition(file.getFullPath(),file.getName());
@@ -293,10 +290,12 @@ public class ReportGeneratorService {
 
 		String path = "resources/templates";
 
+		String fileName = name.endsWith(".png") ? name : name + ".png";
+		
 		IReadAccess access = contentAccessFactory.getPluginSystemReader(null);
 
 		try {
-			InputStream image = access.getFileInputStream(path + "/" + name + ".png");
+			InputStream image = access.getFileInputStream(path + "/" + fileName);
 			IOUtils.copy(image, out);
 
 		} catch (IOException e) {

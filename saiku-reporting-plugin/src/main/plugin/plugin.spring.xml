@@ -49,6 +49,13 @@
     <property name="relativeFilePath" value="web/editor.html" />
     <property name="pluginId" value="saiku-reporting" />
   </bean> 
+
+  <bean id="srpt.report" class="org.pentaho.reporting.platform.plugin.ReportContentGenerator" scope="prototype"/>
+  <bean id="srpt.viewer" class="org.pentaho.platform.plugin.services.webservices.content.PluginFileContentGenerator" scope="prototype">
+    <property name="mimeType" value="text/html" />
+    <property name="relativeFilePath" value="reportviewer/report.html" />
+    <property name="pluginId" value="reporting" />
+  </bean>  
 	
   <bean class="org.pentaho.platform.engine.core.solution.ContentInfo">
 	<property name="mimeType" value="application/zip"/>	

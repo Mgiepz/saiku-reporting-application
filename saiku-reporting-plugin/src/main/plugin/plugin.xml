@@ -20,10 +20,13 @@
 					<id>EDIT</id>
 					<perspective>editor</perspective>
 				</operation>
+				 <operation>
+            		<id>RUN</id>
+            		<perspective>viewer</perspective>
+          		</operation>
 			</operations>
         </content-type>
     </content-types>
-
 
 	<static-paths>
 		<static-path url="/saiku-reporting/web" localFolder="web" />
