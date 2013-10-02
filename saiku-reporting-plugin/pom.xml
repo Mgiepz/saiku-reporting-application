@@ -45,13 +45,8 @@
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem> <groupId>pentaho</groupId> <artifactId>cda</artifactId> 
-									<version>TRUNK-SNAPSHOT</version> <outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
-									</artifactItem>
-								<artifactItem>
-									<groupId>pt.webdetails</groupId>
-									<artifactId>cda-core</artifactId>
-									<version>PRD-TRUNK</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
+									<version>TRUNK-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
 								</artifactItem>
 								<artifactItem>
 									<groupId>pt.webdetails</groupId>
@@ -65,12 +60,6 @@
 									<version>REFACTOR-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-								<!--artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
-									<artifactId>jackson-jaxrs</artifactId>
-									<version>1.8.5</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem-->
 								<artifactItem>
 									<groupId>org.saiku</groupId>
 									<artifactId>saiku-ui</artifactId>
@@ -78,96 +67,6 @@
 									<type>war</type>
 									<outputDirectory>target/stage</outputDirectory>
 								</artifactItem>
-								<!--artifactItem>
-									<groupId>org.codehaus.enunciate</groupId>
-									<artifactId>enunciate-rt</artifactId>
-									<version>${enunciate.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.enunciate</groupId>
-									<artifactId>enunciate-spring3-app-rt</artifactId>
-									<version>${enunciate.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.enunciate</groupId>
-									<artifactId>enunciate-core-annotations</artifactId>
-									<version>${enunciate.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>asm</groupId>
-									<artifactId>asm</artifactId>
-									<version>3.1</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.enunciate</groupId>
-									<artifactId>enunciate-jersey-rt</artifactId>
-									<version>${enunciate.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.sun.jersey</groupId>
-									<artifactId>jersey-core</artifactId>
-									<version>${jersey.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.sun.jersey</groupId>
-									<artifactId>jersey-server</artifactId>
-									<version>${jersey.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.sun.jersey.contribs</groupId>
-									<artifactId>jersey-spring</artifactId>
-									<version>${jersey.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.sun.jersey</groupId>
-									<artifactId>jersey-client</artifactId>
-									<version>${jersey.version}</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
-									<artifactId>jackson-core-asl</artifactId>
-									<version>1.8.5</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
-									<artifactId>jackson-jaxrs</artifactId>
-									<version>1.8.5</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
-									<artifactId>jackson-mapper-asl</artifactId>
-									<version>1.8.5</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
-									<artifactId>jackson-xc</artifactId>
-									<version>1.8.5</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
-									<artifactId>jackson-xc</artifactId>
-									<version>1.8.5</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jettison</groupId>
-									<artifactId>jettison</artifactId>
-									<version>1.2</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
-								</artifactItem-->
 							</artifactItems>
 						</configuration>
 					</execution>
@@ -296,7 +195,6 @@
 			<artifactId>saiku-reporting-core</artifactId>
 			<version>trunk-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.saiku</groupId>
 			<artifactId>saiku-reporting-backend</artifactId>
@@ -462,16 +360,6 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 		</dependency>
-		<!--dependency>
-			<groupId>org.codehaus.enunciate</groupId>
-			<artifactId>enunciate-rt</artifactId>
-			<version>${enunciate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.enunciate</groupId>
-			<artifactId>enunciate-jersey-rt</artifactId>
-			<version>${enunciate.version}</version>
-		</dependency-->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-core</artifactId>
