@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.pentaho.platform.api.engine.IActionSequenceResource;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.libraries.resourceloader.ResourceException;
 
@@ -32,8 +31,6 @@ public interface IReportingComponent {
 	public abstract void setDefaultOutputTarget(String defaultOutputTarget);
 
 	public abstract void setOutputTarget(String outputTarget);
-
-	public abstract IActionSequenceResource getReportDefinition();
 
 	public abstract void setReportFileId(Serializable fileId);
 

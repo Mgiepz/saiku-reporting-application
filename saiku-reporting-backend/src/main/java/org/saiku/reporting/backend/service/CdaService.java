@@ -39,8 +39,7 @@ import pt.webdetails.cda.connections.metadata.MetadataConnection;
 import pt.webdetails.cda.dataaccess.MqlDataAccess;
 import pt.webdetails.cda.dataaccess.Parameter;
 import pt.webdetails.cda.settings.CdaSettings;
-import pt.webdetails.cpf.IPluginCall;
-import pt.webdetails.cpf.plugin.CorePlugin;
+import pt.webdetails.cpf.plugincall.api.IPluginCall;
 import pt.webdetails.cpf.repository.api.IContentAccessFactory;
 import pt.webdetails.cpf.repository.api.IUserContentAccess;
 
@@ -55,21 +54,12 @@ public class CdaService implements ICdaService {
 
 	private IPluginCall cdaCall;
 
-	private String cdaName = StringUtils.randomString20();
-
-	/* (non-Javadoc)
-	 * @see org.saiku.reporting.backend.service.ICdaService#setCdaCall(pt.webdetails.cpf.IPluginCall)
-	 */
 	@Override
 	public void setCdaCall(IPluginCall cdaCall) {
 		this.cdaCall = cdaCall;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.saiku.reporting.backend.service.ICdaService#generateCdaDatasource(org.pentaho.reporting.engine.classic.core.MasterReport, org.saiku.reporting.core.model.ReportSpecification)
-	 */
 	@Override
-	@SuppressWarnings("deprecation")
 	public void generateCdaDatasource(MasterReport mReport, ReportSpecification spec) throws SaikuReportingException {
 
 		String mql = StringEscapeUtils.unescapeHtml(spec.getDataSource().getQueryString());
@@ -96,6 +86,9 @@ public class CdaService implements ICdaService {
 
 		mReport.setDataFactory(f);
 		mReport.setQuery(queryId);
+		
+		//also add datasources for parameters
+		
 
 	}
 
@@ -140,18 +133,17 @@ public class CdaService implements ICdaService {
 		return cda;
 	}    
 
-	/* (non-Javadoc)
-	 * @see org.saiku.reporting.backend.service.ICdaService#storeCda(pt.webdetails.cda.settings.CdaSettings)
-	 */
 	@Override
 	public void storeCda(CdaSettings cda) throws SaikuReportingException {
 
 		String path = SaikuProperties.temporaryPath + cda.getId() +".cda";
-
+		
 		try{
 
-			IUserContentAccess userAccess = contentAccessFactory.getUserContentAccess("/");
+			IUserContentAccess userAccess = contentAccessFactory.getUserContentAccess(null);
 
+			//userAccess.createFolder("SaikuProperties.temporaryPath");
+			
 			if(userAccess.saveFile(path, new ByteArrayInputStream(cda.asXML().getBytes()))){
 				log.debug("file '" + path + "' saved ok");
 			}else {
@@ -170,34 +162,28 @@ public class CdaService implements ICdaService {
 	 * Executes an mql query and returns the result in cda-json format.
 	 * Used to feed parameter widgets
 	 */
-	/* (non-Javadoc)
-	 * @see org.saiku.reporting.backend.service.ICdaService#doMqlQuery(java.lang.String)
-	 */
 	@Override
-	public String doMqlQuery(String mqlQueryString) {
+	public String doMqlQuery(String mqlQueryString) throws SaikuReportingException {
+
+		String cdaName = StringUtils.randomString20();
 
 		String uri = SaikuProperties.temporaryPath + cdaName +".cda";
 
+		generateCda(cdaName, mqlQueryString);
+
+		Map<String, String[]> params = new HashMap<String, String[]> ();
+		params.put("path", new String[]{uri});
+		params.put("dataAccessId",  new String[]{cdaName});
+		params.put("outputType",  new String[]{"Json"});
+
 		try {
-
-			//TODO:
-			//String tempName = "params";
-			
-			generateCda(cdaName, mqlQueryString);
-
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("path", uri);
-			params.put("dataAccessId", cdaName);
-			params.put("outputType", "Json");
-			cdaCall.init(CorePlugin.CDA, "doQueryGet", params);
-
-			return cdaCall.call(); 
-
-		} catch (SaikuReportingException e) {
+			return cdaCall.call(params);
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
+			throw new SaikuReportingException();
 
-		return null;
+		} 
+
 	}
 
 

@@ -56,6 +56,7 @@ public abstract class AbstractMetadataRepository implements MetadataRepository{
 			Locale locale) throws UnsupportedEncodingException {
 
 		Domain domainObject = getDomain(domainId);
+
 		if (domainObject == null) {
 			return;
 		}

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin name="saiku-reporting" title="saiku-reporting" loader="DEFAULT">
 
+  <lifecycle-listener class="org.saiku.reporting.backend.pho.SaikuReportingLifecycleListener"/>
+
   <overlays>
     <overlay id="startup.saikuReporting"  resourcebundle="content/saiku-reporting/web/saiku-adhoc.properties" priority="1">
   		<menubar id="newmenu">

@@ -22,7 +22,7 @@
     <property name="sessionService" ref="sessionService" />
    </bean>
    
-  <bean id="cdaCall" scope="prototype" class="org.saiku.reporting.backend.temp.cpf.InterPluginCall"/>
+  <bean id="cdaCall" scope="prototype" class="org.saiku.reporting.backend.pho.CdaPluginCallFactoryBean"/>
 
   <bean id="contentAccessFactory" scope="prototype" class="pt.webdetails.cpf.PentahoPluginEnvironment" />
 

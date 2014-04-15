@@ -9,8 +9,7 @@
 		<spring.version>3.0.3.RELEASE</spring.version>
 		<spring.security.version>3.0.3.RELEASE</spring.security.version>
 		<spring.security.tiger.version>2.0.6.RELEASE</spring.security.tiger.version>
-		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
-		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
+		<pentaho.version>5.0.1-stable</pentaho.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -130,15 +129,13 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cda-core</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<version>REFACTOR-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>pt.webdetails</groupId>
+			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>
 			<version>REFACTOR-SNAPSHOT</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
@@ -199,104 +196,104 @@
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libloader</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libbase</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libserializer</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libformula</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libfonts</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libformat</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libdocbundle</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>libxml</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-library</groupId>
 			<artifactId>librepository</artifactId>
-			<version>${pentaho.libs.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 				<!-- -->
 
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-core</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-cda</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-mondrian</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-olap4j</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-pmd</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-kettle</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-xpath</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-scripting</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-extensions-drill-down</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-wizard-core</artifactId>
-			<version>${pentaho.reporting.version}</version>
+			<version>${pentaho.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -350,11 +347,11 @@
 			<artifactId>jgroups</artifactId>
 			<version>2.12.0.CR5</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>pentaho-bi-platform-api</artifactId>
 			<version>3.9.0-stable</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

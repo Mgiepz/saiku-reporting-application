@@ -20,7 +20,7 @@ import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.core.model.ReportSpecification;
 
 import pt.webdetails.cda.settings.CdaSettings;
-import pt.webdetails.cpf.IPluginCall;
+import pt.webdetails.cpf.plugincall.api.IPluginCall;
 
 public interface ICdaService {
 
@@ -45,6 +45,6 @@ public interface ICdaService {
 	 * Executes an mql query and returns the result in cda-json format.
 	 * Used to feed parameter widgets
 	 */
-	public abstract String doMqlQuery(String mqlQueryString);
+	public abstract String doMqlQuery(String mqlQueryString) throws SaikuReportingException;
 
 }

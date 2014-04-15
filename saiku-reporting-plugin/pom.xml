@@ -10,9 +10,7 @@
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
-		<pentaho.reporting.version>5.0.0</pentaho.reporting.version>
-		<pentaho.platform.version>5.0.0</pentaho.platform.version>
+		<pentaho.version>5.0.1-stable</pentaho.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<jersey.version>1.6</jersey.version>
 		<enunciate.version>1.23</enunciate.version>
@@ -44,18 +42,32 @@
 									<version>trunk-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-								<artifactItem> <groupId>pentaho</groupId> <artifactId>cda</artifactId> 
+								<artifactItem>
+									<groupId>pentaho</groupId> 
+									<artifactId>cda-core</artifactId> 
+									<version>REFACTOR-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
+								</artifactItem>								
+								<artifactItem>
+									<groupId>pentaho</groupId> 
+									<artifactId>cda-pentaho5</artifactId> 
+									<version>REFACTOR-SNAPSHOT</version>
+									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
+								</artifactItem>	
+								<!--artifactItem>
+									<groupId>pentaho</groupId> 
+									<artifactId>cda</artifactId> 
 									<version>TRUNK-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
-								</artifactItem>
+								</artifactItem-->
 								<artifactItem>
-									<groupId>pt.webdetails</groupId>
+									<groupId>pentaho</groupId>
 									<artifactId>cpf-core</artifactId>
 									<version>REFACTOR-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
-									<groupId>pt.webdetails</groupId>
+									<groupId>pentaho</groupId>
 									<artifactId>cpf-pentaho5</artifactId>
 									<version>REFACTOR-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
@@ -147,30 +159,28 @@
 		</plugins>
 	</build>
 	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>central</id>
-			<name>repo</name>
-			<url>http://repo.analytical-labs.com/repo</url>
-		</repository>
-		<repository>
-			<id>utility</id>
-			<name>utility-releases</name>
-			<url>http://repo.analytical-labs.com/alabs-snapshot-local</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>pentaho-repo</id>
-			<name>pentaho repository</name>
-			<url>http://repository.pentaho.org/artifactory/pentaho</url>
-		</repository>
+  	<repository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>repo</name>
+          <url>http://repository.pentaho.org/artifactory/repo</url>
+        </repository>
+        <repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>repo</name>
+          <url>http://repository.pentaho.org/artifactory/repo</url>
+        </repository>
 		<repository>
 			<id>pentaho-third-party</id>
 			<url>http://repo.pentaho.org/artifactory/third-party/</url>
+		</repository>
+        <repository>
+			<id>alabs-repo</id>
+			<name>alabs repository</name>
+			<url>http://repo.analytical-labs.com/repo/</url>
 		</repository>
 		<repository>
 			<id>ibiblio</id>
@@ -187,7 +197,6 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
 	<dependencies>
 		<!-- SAIKU-REPORTING -->
 		<dependency>
@@ -204,25 +213,52 @@
 		<!-- CTOOLS -->
 		<dependency>
 			<groupId>pentaho</groupId>
-			<artifactId>cda</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<artifactId>cda-core</artifactId>
+			<version>REFACTOR-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>pt.webdetails</groupId>
+			<groupId>pentaho</groupId>
+			<artifactId>cda-pentaho5</artifactId>
+			<version>REFACTOR-SNAPSHOT</version>
+    		<exclusions>
+        		<exclusion>
+            	<groupId>*</groupId>
+            	<artifactId>*</artifactId>
+        		</exclusion>
+    		</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>
 			<version>REFACTOR-SNAPSHOT</version>
+			<exclusions>
+			<exclusion>
+					<groupId>janino</groupId>
+					<artifactId>janino</artifactId>
+			</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>pt.webdetails</groupId>
+			<groupId>pentaho</groupId>
 			<artifactId>cpf-pentaho5</artifactId>
 			<version>REFACTOR-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>pentaho</groupId>
+					<artifactId>pentaho-user-console-package</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>janino</groupId>
+					<artifactId>janino</artifactId>
+				</exclusion>		
+			</exclusions>
 		</dependency>
 
 		<!-- BISERVER -->
 		<dependency>
 			<groupId>pentaho-reporting-engine</groupId>
 			<artifactId>pentaho-reporting-engine-classic-core-platform-plugin</artifactId>
-			<version>${pentaho.platform.version}</version>
+			<version>${pentaho.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -238,13 +274,13 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>pentaho-platform-api</artifactId>
-			<version>${pentaho.platform.version}</version>
+			<version>${pentaho.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>pentaho-platform-core</artifactId>
-			<version>${pentaho.platform.version}</version>
+			<version>${pentaho.version}</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -296,7 +332,7 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>pentaho-platform-extensions</artifactId>
-			<version>${pentaho.platform.version}</version>
+			<version>${pentaho.version}</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -340,7 +376,7 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>pentaho-connections</artifactId>
-			<version>${pentaho.platform.version}</version>
+			<version>${pentaho.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

@@ -356,8 +356,7 @@ public class ReportGeneratorService {
 		reportingComponent.setReport(output);
 		reportingComponent.setPaginateOutput(true);
 		reportingComponent.setInputs(reportParameters);
-		reportingComponent
-		.setDefaultOutputTarget(PdfPageableModule.PDF_EXPORT_TYPE);
+		reportingComponent.setDefaultOutputTarget(PdfPageableModule.PDF_EXPORT_TYPE);
 		reportingComponent.setOutputTarget(PdfPageableModule.PDF_EXPORT_TYPE);
 		reportingComponent.setOutputStream(stream);
 		reportingComponent.validate();
