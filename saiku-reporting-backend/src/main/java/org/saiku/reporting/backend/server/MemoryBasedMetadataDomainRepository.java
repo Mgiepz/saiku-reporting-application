@@ -23,7 +23,6 @@ import org.pentaho.metadata.repository.InMemoryMetadataDomainRepository;
 import org.pentaho.metadata.util.XmiParser;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import pt.webdetails.cpf.repository.api.IContentAccessFactory;
 
 public class MemoryBasedMetadataDomainRepository {
 
@@ -35,7 +34,7 @@ public class MemoryBasedMetadataDomainRepository {
 //	private IRepositoryAccess repositoryAccess;
 	
 //	@Autowired
-	private IContentAccessFactory contentAccessFactory;
+	//private IContentAccessFactory contentAccessFactory;
 
     public MemoryBasedMetadataDomainRepository() {
 

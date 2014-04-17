@@ -42,7 +42,7 @@
 									<version>trunk-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-								<artifactItem>
+								<!--<artifactItem>
 									<groupId>pentaho</groupId> 
 									<artifactId>cda-core</artifactId> 
 									<version>REFACTOR-SNAPSHOT</version>
@@ -53,7 +53,7 @@
 									<artifactId>cda-pentaho5</artifactId> 
 									<version>REFACTOR-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
-								</artifactItem>	
+								</artifactItem>-->
 								<!--artifactItem>
 									<groupId>pentaho</groupId> 
 									<artifactId>cda</artifactId> 
@@ -211,7 +211,7 @@
 		</dependency>
 
 		<!-- CTOOLS -->
-		<dependency>
+		<!--<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cda-core</artifactId>
 			<version>REFACTOR-SNAPSHOT</version>
@@ -226,7 +226,7 @@
             	<artifactId>*</artifactId>
         		</exclusion>
     		</exclusions>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>

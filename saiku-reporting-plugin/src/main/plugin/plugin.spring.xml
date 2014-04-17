@@ -38,9 +38,9 @@
   
   <bean id="reportGeneratorResource" scope="prototype" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />      
   
-  <bean id="cdaService" scope="prototype" class="org.saiku.reporting.backend.service.CdaService"> 
+<!--  <bean id="cdaService" scope="prototype" class="org.saiku.reporting.backend.service.CdaService">
       <property name="cdaCall" ref="cdaCall" />
-  </bean>
+  </bean>-->
 
   <bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource"/>
 

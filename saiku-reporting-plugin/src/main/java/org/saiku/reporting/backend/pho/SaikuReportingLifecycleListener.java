@@ -12,8 +12,6 @@ import org.pentaho.platform.plugin.services.importexport.StreamConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.webdetails.cda.CdaEngine;
-import pt.webdetails.cda.PentahoCdaEnvironment;
 import pt.webdetails.cpf.PentahoPluginEnvironment;
 import pt.webdetails.cpf.PluginEnvironment;
 
@@ -26,7 +24,7 @@ public class SaikuReportingLifecycleListener implements
 	public void init() throws PluginLifecycleException {
 		
 		PluginEnvironment.init(PentahoPluginEnvironment.getInstance());
-		CdaEngine.init(new PentahoCdaEnvironment());
+		//CdaEngine.init(new PentahoCdaEnvironment());
 
 		/*
 		 * Thnx Mysticfall for coming up with that hack!

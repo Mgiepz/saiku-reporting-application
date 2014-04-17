@@ -126,11 +126,11 @@
 		</dependency>
 
 		<!-- CTOOLS -->
-		<dependency>
+<!--		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cda-core</artifactId>
 			<version>REFACTOR-SNAPSHOT</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>

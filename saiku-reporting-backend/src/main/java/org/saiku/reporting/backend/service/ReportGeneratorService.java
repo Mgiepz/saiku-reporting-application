@@ -89,8 +89,8 @@ public class ReportGeneratorService {
 	@Autowired
 	private MetadataRepository metadataRepository;
 
-	@Autowired
-	private ICdaService cdaService;
+	//@Autowired
+	//private ICdaService cdaService;
 
 	private IReportingComponent reportingComponent;
 
@@ -117,7 +117,7 @@ public class ReportGeneratorService {
 		DatasourceType dsType = spec.getDataSource().getType();
 
 		if (DatasourceType.CDA.equals(dsType)) {
-			cdaService.generateCdaDatasource(mReport, spec);
+		//	cdaService.generateCdaDatasource(mReport, spec);
 		} else if (DatasourceType.METADATA.equals(dsType)) {
 			generatePmdDatasource(mReport, spec);
 		}

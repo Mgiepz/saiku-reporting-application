@@ -27,8 +27,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
-import org.saiku.reporting.backend.service.ICdaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +38,8 @@ public class CdaResource {
     @Context
     private HttpServletResponse anotherServletResponse;
   
-	@Autowired
-    private ICdaService cda;
+	//@Autowired
+    //private ICdaService cda;
 	
     @GET
     @Produces({"application/json" })

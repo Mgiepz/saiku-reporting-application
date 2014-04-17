@@ -38,11 +38,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.saiku.reporting.backend.exceptions.SaikuClientException;
-import org.saiku.reporting.backend.exceptions.SaikuReportingException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
-import org.saiku.reporting.backend.service.ICdaService;
 import org.saiku.reporting.backend.service.ReportGeneratorService;
-import org.saiku.reporting.backend.util.ReportModelLogger;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.TemplateDefinition;
 import org.slf4j.Logger;
@@ -64,8 +61,8 @@ public class ReportGeneratorResource {
 	@Autowired
 	private ReportGeneratorService reportGeneratorService;
 	
-	@Autowired
-    private ICdaService cda;
+	//@Autowired
+    //private ICdaService cda;
 
 	@POST
 	@Produces({"application/json" })
@@ -164,13 +161,14 @@ public class ReportGeneratorResource {
 	@Produces({"application/json" })
 	@Path("/filtervalues")
 	public String getFilterValues(@FormParam("mql") String mqlQueryString) {
-		
+		/*
 		try {
-			return cda.doMqlQuery(mqlQueryString);	
+			return cda.doMqlQuery(mqlQueryString);
 		}catch (SaikuReportingException e) {
 			log.error("Cannot doMqlQuery",e);
 			throw new SaikuClientException(e.getMessage());
-		}
+		}*/
+        return null;
 	}
 	
 	@POST
