@@ -16,6 +16,7 @@
 package org.saiku.reporting.backend.rest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
@@ -219,15 +220,15 @@ public class ReportGeneratorResource {
 			}
 			
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			
-			reportGeneratorService.renderReportPdf(spec, output);
+            reportGeneratorService.renderReportXls(spec, output);
 			String name = "export";
 
 			byte[] doc = output.toByteArray();
 
 			return Response.ok(doc, MediaType.APPLICATION_OCTET_STREAM).header(
 					"content-disposition",
-					"attachment; filename = " + name + ".pdf").header(
+					"attachment; filename = " + name + ".xls" +
+                            "").header(
 							"content-length",doc.length).build();
 
 		} catch (Exception e) {

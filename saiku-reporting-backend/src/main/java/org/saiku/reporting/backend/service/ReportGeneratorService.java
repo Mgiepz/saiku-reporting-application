@@ -52,6 +52,7 @@ import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfPageableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.xls.ExcelTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriter;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterException;
 import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
@@ -220,6 +221,28 @@ public class ReportGeneratorService {
 
 	}
 
+    public void renderReportXls(ReportSpecification spec,
+                                ByteArrayOutputStream stream) throws ResourceLoadingException,
+            ResourceCreationException, ResourceKeyCreationException,
+            MalformedURLException, SaikuReportingException, ResourceException {
+
+        // preprocess the report and augment the spec with all infos from the
+        // template
+        MasterReport output = prepareReport(spec);
+
+        Map<String, Object> reportParameters = null; // ParamUtils.getReportParameters("",
+        // spec);
+
+        try {
+            // let the engine process the report
+            generateXlsReport(output, stream, reportParameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SaikuReportingException("failed to generate xls");
+        }
+
+    }
+
 	private MasterReport getPrptTemplate(ReportSpecification spec)
 			throws SaikuReportingException {
 
@@ -363,6 +386,31 @@ public class ReportGeneratorService {
 		reportingComponent.execute();
 
 	}
+
+    /**
+     * Generate the report as xls
+     *
+     * @param output
+     * @param stream
+     * @param report
+     * @param acceptedPage
+     * @param query2
+     * @throws Exception
+     */
+    @SuppressWarnings("unused")
+    private void generateXlsReport(MasterReport output, OutputStream stream,
+                                   Map<String, Object> reportParameters) throws Exception {
+
+        reportingComponent.setReport(output);
+        reportingComponent.setPaginateOutput(true);
+        reportingComponent.setInputs(reportParameters);
+        reportingComponent.setDefaultOutputTarget(ExcelTableModule.EXCEL_PAGE_EXPORT_TYPE);
+        reportingComponent.setOutputTarget(ExcelTableModule.EXCEL_PAGE_EXPORT_TYPE);
+        reportingComponent.setOutputStream(stream);
+        reportingComponent.validate();
+        reportingComponent.execute();
+
+    }
 
 	// ----------------------------------------------------------------------------
 	// move into factory
