@@ -16,6 +16,7 @@
 package org.saiku.reporting.backend.rest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
@@ -248,8 +249,7 @@ public class ReportGeneratorResource {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
             reportGeneratorService.renderReportXls(spec, output);
 			String name = "export";
-
-			byte[] doc = output.toByteArray();
+            byte[] doc = output.toByteArray();
 
 			return Response.ok(doc, MediaType.APPLICATION_OCTET_STREAM).header(
 					"content-disposition",
@@ -285,27 +285,36 @@ public class ReportGeneratorResource {
 	}
 
 	@POST
-	@Produces({ "text/csv" })
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/csv")
-	public Response exportCsv(ReportSpecification spec) {
+	public Response exportCsv(@FormParam("json") String reportSpec) {
 
-		try {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			//exportService.writeCsv(queryName, output);  <- has to be done with cda resource
-			String name = "export";
+        ReportSpecification spec = null;
 
-			byte[] doc = output.toByteArray();
+        try {
+            if (reportSpec != null) {
+                ObjectMapper mapper = new ObjectMapper();
+                spec = mapper.readValue(URLDecoder.decode(reportSpec, "UTF-8"),ReportSpecification.class);
 
-			return Response.ok(doc, MediaType.APPLICATION_OCTET_STREAM).header(
-					"content-disposition",
-					"attachment; filename = " + name + ".csv").header(
-							"content-length",doc.length).build();
+            }
 
-		} catch (Exception e) {
-			throw new WebApplicationException(e);
-		}
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            reportGeneratorService.renderReportCsv(spec, output);
+            String name = "export";
+            byte[] doc = output.toByteArray();
 
-	}
+            return Response.ok(doc, MediaType.APPLICATION_OCTET_STREAM).header(
+                    "content-disposition",
+                    "attachment; filename = " + name + ".csv" +
+                            "").header(
+                    "content-length",doc.length).build();
+
+        } catch (Exception e) {
+            throw new WebApplicationException(e);
+        }
+    }
+	
 
 
 }

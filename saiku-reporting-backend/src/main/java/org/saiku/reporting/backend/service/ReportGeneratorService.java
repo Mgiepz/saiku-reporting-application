@@ -60,6 +60,7 @@ import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfPageableModule;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.csv.CSVTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.xls.ExcelTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriter;
@@ -413,14 +414,38 @@ public class ReportGeneratorService {
         reportingComponent.setReport(output);
         reportingComponent.setPaginateOutput(true);
         reportingComponent.setInputs(reportParameters);
-        reportingComponent.setDefaultOutputTarget(ExcelTableModule.EXCEL_PAGE_EXPORT_TYPE);
-        reportingComponent.setOutputTarget(ExcelTableModule.EXCEL_PAGE_EXPORT_TYPE);
+        reportingComponent.setDefaultOutputTarget(ExcelTableModule.EXCEL_FLOW_EXPORT_TYPE);
+        reportingComponent.setOutputTarget(ExcelTableModule.EXCEL_FLOW_EXPORT_TYPE);
         reportingComponent.setOutputStream(stream);
         reportingComponent.validate();
         reportingComponent.execute();
 
     }
 
+    /**
+     * Generate the report as csv
+     *
+     * @param output
+     * @param stream
+     * @param report
+     * @param acceptedPage
+     * @param query2
+     * @throws Exception
+     */
+    @SuppressWarnings("unused")
+    private void generateCsvReport(MasterReport output, OutputStream stream,
+                                   Map<String, Object> reportParameters) throws Exception {
+
+        reportingComponent.setReport(output);
+        reportingComponent.setPaginateOutput(true);
+        reportingComponent.setInputs(reportParameters);
+        reportingComponent.setDefaultOutputTarget(CSVTableModule.TABLE_CSV_STREAM_EXPORT_TYPE);
+        reportingComponent.setOutputTarget(CSVTableModule.TABLE_CSV_STREAM_EXPORT_TYPE);
+        reportingComponent.setOutputStream(stream);
+        reportingComponent.validate();
+        reportingComponent.execute();
+
+    }
 	// ----------------------------------------------------------------------------
 	// move into factory
 	/**
@@ -482,6 +507,21 @@ public class ReportGeneratorService {
 	public void setMetadataRepository(MetadataRepository metadataRepository) {
 		this.metadataRepository = metadataRepository;
 	}
+
+    public void renderReportCsv(ReportSpecification spec, ByteArrayOutputStream stream) throws SaikuReportingException, ResourceException, MalformedURLException {
+        MasterReport output = prepareReport(spec);
+
+        Map<String, Object> reportParameters = null; // ParamUtils.getReportParameters("",
+        // spec);
+
+        try {
+            // let the engine process the report
+            generateCsvReport(output, stream, reportParameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SaikuReportingException("failed to generate xls");
+        }
+    }
 
 /*    public MarshallableResultSet doQuery( Query query, Integer rowLimit ) {
         org.pentaho.metadata.query.model.Query fullQuery = convertQuery( query );
