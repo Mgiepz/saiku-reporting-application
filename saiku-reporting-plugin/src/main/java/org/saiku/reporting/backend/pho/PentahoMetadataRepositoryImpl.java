@@ -18,8 +18,12 @@ package org.saiku.reporting.backend.pho;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.metadata.model.Domain;
+import org.pentaho.metadata.model.IMetadataQueryExec;
 import org.pentaho.metadata.model.LogicalModel;
+import org.pentaho.metadata.query.model.Parameter;
+import org.pentaho.metadata.query.model.Query;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
+import org.pentaho.platform.api.engine.IPentahoSession;
 import org.pentaho.platform.engine.core.system.PentahoSessionHolder;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
 import org.saiku.reporting.backend.messages.Messages;
@@ -27,6 +31,9 @@ import org.saiku.reporting.backend.messages.Messages;
 import org.saiku.reporting.backend.objects.metadata.MetadataDtoMapper;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.saiku.reporting.backend.server.AbstractMetadataRepository;
+import org.saiku.reporting.backend.server.MetadataRepository;
+
+import java.util.Map;
 
 public class PentahoMetadataRepositoryImpl extends AbstractMetadataRepository {
 
@@ -97,5 +104,60 @@ public class PentahoMetadataRepositoryImpl extends AbstractMetadataRepository {
 						PentahoSessionHolder.getSession());
 		return mdr;
 	}
+
+
+
+    public Object getExecutor(Object queryObject, Map<String, Object> inputs, MetadataRepository metadataRepository){
+       IPentahoSession session = null;
+
+       String queryExecName = ((Query)queryObject).getLogicalModel().getPhysicalModel().getQueryExecName();
+       String queryExecDefault = ((Query)queryObject).getLogicalModel().getPhysicalModel().getDefaultQueryClassname();
+       // String modelType = (String) inputs.get("modeltype");
+       IMetadataQueryExec executor = PentahoSystem.get( IMetadataQueryExec.class, queryExecName, session );
+
+       if ( executor == null ) {
+           // get the executor from a plugin possibly?
+           Class clazz;
+           try {
+               clazz =
+                       Class.forName( queryExecDefault, true, ((Query)queryObject).getLogicalModel().getPhysicalModel().getClass()
+                               .getClassLoader() );
+               executor = (IMetadataQueryExec) clazz.getConstructor( new Class[] {} ).newInstance( new Object[] {} );
+           } catch ( Exception e ) {
+
+           }
+       }
+
+       if ( executor == null ) {
+           // the query exec class is not defined thru configuration, go with the default
+           Class clazz;
+           try {
+               clazz = Class.forName( queryExecDefault );
+               executor = (IMetadataQueryExec) clazz.getConstructor( new Class[] {} ).newInstance( new Object[] {} );
+           } catch ( Exception e ) {
+
+               return null;
+           }
+       }
+       else{
+           return executor;
+       }
+
+        if ( ((Query)queryObject).getParameters() != null ) {
+            for ( Parameter param : ((Query)queryObject).getParameters() ) {
+
+                Object value = null;
+                if ( inputs != null ) {
+                    value = inputs.get( param.getName() );
+                }
+
+                executor = (IMetadataQueryExec) metadataRepository.getExecutor(queryObject, inputs, metadataRepository);
+                executor.setParameter( param, value );
+
+            }
+        }
+
+        return executor;
+   }
 
 }

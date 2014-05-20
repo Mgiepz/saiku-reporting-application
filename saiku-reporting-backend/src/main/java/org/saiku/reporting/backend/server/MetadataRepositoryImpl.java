@@ -25,6 +25,8 @@ import org.saiku.reporting.backend.objects.metadata.MetadataDtoMapper;
 import org.saiku.reporting.backend.objects.metadata.impl.MetadataModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
+
 public class MetadataRepositoryImpl extends AbstractMetadataRepository {
 
     private Log log = LogFactory.getLog(MetadataRepositoryImpl.class);
@@ -89,5 +91,10 @@ public class MetadataRepositoryImpl extends AbstractMetadataRepository {
 
         return mbr.getImmdr();
 
+    }
+
+    @Override
+    public Object getExecutor(Object query, Map<String, Object> inputs, MetadataRepository metadataRepository) {
+        return null;
     }
 }

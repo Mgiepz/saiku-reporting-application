@@ -16,7 +16,6 @@
 package org.saiku.reporting.backend.rest;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
@@ -38,9 +37,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.pentaho.commons.connection.IPentahoResultSet;
+import org.pentaho.commons.connection.marshal.MarshallableResultSet;
 import org.saiku.reporting.backend.exceptions.SaikuClientException;
 import org.saiku.reporting.backend.objects.dto.HtmlReport;
 import org.saiku.reporting.backend.service.ReportGeneratorService;
+import org.saiku.reporting.backend.util.MetadataQueryComponent;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.TemplateDefinition;
 import org.slf4j.Logger;
@@ -61,7 +63,13 @@ public class ReportGeneratorResource {
 
 	@Autowired
 	private ReportGeneratorService reportGeneratorService;
-	
+
+    @Autowired
+    private MetadataQueryComponent metadataQueryComponent;
+
+    public void setMetadataQueryComponent(MetadataQueryComponent metadataQueryComponent){
+        this.metadataQueryComponent = metadataQueryComponent;
+    }
 	//@Autowired
     //private ICdaService cda;
 
@@ -161,17 +169,35 @@ public class ReportGeneratorResource {
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces({"application/json" })
 	@Path("/filtervalues")
-	public String getFilterValues(@FormParam("mql") String mqlQueryString) {
-		/*
-		try {
-			return cda.doMqlQuery(mqlQueryString);
-		}catch (SaikuReportingException e) {
-			log.error("Cannot doMqlQuery",e);
-			throw new SaikuClientException(e.getMessage());
-		}*/
-        return null;
+	public MarshallableResultSet getFilterValues(@FormParam("mql") String mqlQueryString) {
+		
+        MarshallableResultSet res = doXmlQuery(mqlQueryString, 10000);
+        return res;
 	}
-	
+
+    public MarshallableResultSet doXmlQuery( String xml, Integer rowLimit ) {
+        IPentahoResultSet resultSet = executeQuery( xml, rowLimit );
+        if ( resultSet == null ) {
+            return null;
+        }
+        MarshallableResultSet result = new MarshallableResultSet();
+        result.setResultSet( resultSet );
+        return result;
+    }
+    protected IPentahoResultSet executeQuery( String query, Integer rowLimit ) {
+        // create a component to execute the query
+        metadataQueryComponent.setQuery(query);
+        metadataQueryComponent.setLive(false);
+        metadataQueryComponent.setUseForwardOnlyResultSet(true);
+        if ( rowLimit != null && rowLimit > -1 ) {
+            // set the row limit
+            metadataQueryComponent.setMaxRows(rowLimit);
+        }
+        if ( metadataQueryComponent.execute() ) {
+            return metadataQueryComponent.getResultSet();
+        }
+        return null;
+    }
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces({ "application/vnd.pdf" })

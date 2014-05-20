@@ -29,14 +29,21 @@
   <bean id="reportingComponent" class="org.saiku.reporting.backend.pho.component.ReportingComponentWrapper" /> 
   
   <bean id="metadataRepository" class="org.saiku.reporting.backend.pho.PentahoMetadataRepositoryImpl" />
-  
-  <bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
+
+  <bean id="metadataQuery" class="org.saiku.reporting.backend.util.MetadataQueryComponent">
+     <property name="metadataRepository" ref="metadataRepository"/>
+  </bean>
+
+
+    <bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
   
   <bean id="reportGeneratorService" scope="prototype" class="org.saiku.reporting.backend.service.ReportGeneratorService">
     <property name="reportingComponent" ref="reportingComponent" />
   </bean>
   
-  <bean id="reportGeneratorResource" scope="prototype" class="org.saiku.reporting.backend.rest.ReportGeneratorResource" />      
+  <bean id="reportGeneratorResource" scope="prototype" class="org.saiku.reporting.backend.rest.ReportGeneratorResource">
+    <property name="metadataQueryComponent" ref="metadataQuery"></property>
+  </bean>
   
 <!--  <bean id="cdaService" scope="prototype" class="org.saiku.reporting.backend.service.CdaService">
       <property name="cdaCall" ref="cdaCall" />
@@ -64,5 +71,6 @@
 	<property name="canExport" value="true"/>		
 	<pen:publish as-type="INTERFACES"/>
   </bean>
+
 
 </beans>

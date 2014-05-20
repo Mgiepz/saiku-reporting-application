@@ -47,6 +47,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.pentaho.commons.connection.IPentahoResultSet;
+import org.pentaho.commons.connection.marshal.MarshallableResultSet;
+import org.pentaho.metadata.model.Domain;
+import org.pentaho.metadata.model.LogicalColumn;
+import org.pentaho.metadata.model.LogicalModel;
+import org.pentaho.metadata.model.concept.types.AggregationType;
+import org.pentaho.metadata.model.concept.types.DataType;
+import org.pentaho.metadata.query.model.*;
+import org.pentaho.metadata.query.model.util.QueryXmlHelper;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -474,6 +483,106 @@ public class ReportGeneratorService {
 		this.metadataRepository = metadataRepository;
 	}
 
+/*    public MarshallableResultSet doQuery( Query query, Integer rowLimit ) {
+        org.pentaho.metadata.query.model.Query fullQuery = convertQuery( query );
+        QueryXmlHelper helper = new QueryXmlHelper();
+        String xml = helper.toXML( fullQuery );
+        return doXmlQuery( xml, rowLimit );
+    }
+public MarshallableResultSet doXmlQuery( String xml, Integer rowLimit ) {
+        IPentahoResultSet resultSet = executeQuery( xml, rowLimit );
+        if ( resultSet == null ) {
+            return null;
+        }
+        MarshallableResultSet result = new MarshallableResultSet();
+        result.setResultSet( resultSet );
+        return result;
+    }
 
+    protected IPentahoResultSet executeQuery( String query, Integer rowLimit ) {
+        // create a component to execute the query
+        MetadataQueryComponent dataComponent = new MetadataQueryComponent();
+        dataComponent.setQuery( query );
+        dataComponent.setLive( false );
+        dataComponent.setUseForwardOnlyResultSet( true );
+        if ( rowLimit != null && rowLimit > -1 ) {
+            // set the row limit
+            dataComponent.setMaxRows( rowLimit );
+        }
+        if ( dataComponent.execute() ) {
+            return dataComponent.getResultSet();
+        }
+        return null;
+    }
 
+    public org.pentaho.metadata.query.model.Query convertQuery( Query src ) {
+
+        IMetadataDomainRepository domainRepository =
+                PentahoSystem.get( IMetadataDomainRepository.class, PentahoSessionHolder.getSession() );
+
+        Domain fullDomain = domainRepository.getDomain( src.getDomainName() );
+        LogicalModel logicalModel = fullDomain.findLogicalModel( src.getModelId() );
+
+        // create a new full query object
+        org.pentaho.metadata.query.model.Query dest =
+                new org.pentaho.metadata.query.model.Query( fullDomain, logicalModel );
+
+        // now add the selections
+        List<Selection> selections = dest.getSelections();
+        for ( Column column : src.getColumns() ) {
+            // get the objects needed for the selection
+            LogicalColumn logicalColumn = logicalModel.findLogicalColumn( column.getId() );
+            org.pentaho.metadata.model.Category category = getCategory( column.getId(), logicalModel );
+            AggregationType aggregationType = AggregationType.valueOf( column.getSelectedAggType() );
+            // create a selection and add it to the list
+            Selection selection = new Selection( category, logicalColumn, aggregationType );
+            selections.add( selection );
+        }
+
+        // now add the filters
+        List<Constraint> constraints = dest.getConstraints();
+        for ( Condition condition : src.getConditions() ) {
+            org.pentaho.metadata.query.model.CombinationType combinationType =
+                    CombinationType.valueOf(condition.getCombinationType());
+            LogicalColumn logicalColumn = logicalModel.findLogicalColumn( condition.getColumn() );
+            String paramName = condition.isParameterized() ? condition.getValue()[0] : null;
+            String formula = condition.getCondition( logicalColumn.getDataType().name(), paramName );
+            Constraint constraint = new Constraint( combinationType, formula );
+            constraints.add( constraint );
+        }
+
+        // now set the disable distinct option
+        if ( src.getDisableDistinct() != null ) {
+            dest.setDisableDistinct( src.getDisableDistinct() );
+        }
+
+        // now add the sorting information
+        List<org.pentaho.metadata.query.model.Order> orders = dest.getOrders();
+        for ( Order order : src.getOrders() ) {
+            // find the selection
+            for ( Selection selection : selections ) {
+                if ( selection.getLogicalColumn().getId().equals( order.getColumn() ) ) {
+                    Order.Type type = Order.Type.valueOf(order.getOrderType());
+                    org.pentaho.metadata.query.model.Order fullOrder =
+                            new org.pentaho.metadata.query.model.Order( selection, type );
+                    orders.add( fullOrder );
+                }
+            }
+        }
+
+        // now add the parameter information
+        List<org.pentaho.metadata.query.model.Parameter> parameters = dest.getParameters();
+        for ( Parameter parameter : src.getParameters() ) {
+            // find the column for this parameter
+            LogicalColumn logicalColumn = logicalModel.findLogicalColumn( parameter.getColumn() );
+            DataType type = logicalColumn.getDataType();
+            String[] value = parameter.getValue();
+            final String name = parameter.getName() != null ? parameter.getName() : parameter.getColumn();
+            org.pentaho.metadata.query.model.Parameter fullParam =
+                    new org.pentaho.metadata.query.model.Parameter( name, type, value[0] );
+            parameters.add( fullParam );
+        }
+        return dest;
+    }
+*/
 }

@@ -16,6 +16,7 @@
 package org.saiku.reporting.backend.server;
 
 import java.util.Locale;
+import java.util.Map;
 
 import org.pentaho.metadata.model.Domain;
 import org.pentaho.metadata.model.LogicalModel;
@@ -67,4 +68,5 @@ public interface MetadataRepository {
 	
 	public abstract IMetadataDomainRepository getMetadataDomainRepository();
 
+    public abstract Object getExecutor(Object query, Map<String, Object> inputs, MetadataRepository metadataRepository);
 }
