@@ -7,7 +7,7 @@
     <overlay id="startup.saikuReporting"  resourcebundle="content/saiku-reporting/web/saiku-adhoc.properties" priority="1">
   		<menubar id="newmenu">
   			<menuitem id="new-saiku-report" label="Saiku Report" command="mantleXulHandler.openUrl('Saiku Reporting','Saiku Reporting','content/saiku-reporting/web/index.html?biplugin=true')" />		
-  			<menuitem id="new-saiku-crosstab-report" label="Saiku Crosstab-Report" command="mantleXulHandler.openUrl('Saiku Reporting','Saiku Reporting','content/saiku-reporting/web/index.html?biplugin=true&amp;mode=crosstab')" />		
+  			<!--<menuitem id="new-saiku-crosstab-report" label="Saiku Crosstab-Report" command="mantleXulHandler.openUrl('Saiku Reporting','Saiku Reporting','content/saiku-reporting/web/index.html?biplugin=true&amp;mode=crosstab')" />-->
   		</menubar>				
     </overlay>
   </overlays>
