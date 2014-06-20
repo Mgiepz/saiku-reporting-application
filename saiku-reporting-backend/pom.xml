@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>
-			<version>REFACTOR-SNAPSHOT</version>
+			<version>TRUNK-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>

@@ -51,7 +51,9 @@
 
   <bean id="cdaResource" class="org.saiku.reporting.backend.rest.CdaResource"/>
     <bean id="prpt.parameter" class="org.pentaho.reporting.platform.plugin.ParameterContentGenerator" scope="prototype"/>
-   <bean id="srpt.editor" class="org.pentaho.platform.plugin.services.webservices.content.PluginFileContentGenerator" scope="prototype">
+    <bean id="srpt.parameter" class="org.pentaho.reporting.platform.plugin.ParameterContentGenerator" scope="prototype"/>
+
+    <bean id="srpt.editor" class="org.pentaho.platform.plugin.services.webservices.content.PluginFileContentGenerator" scope="prototype">
     <property name="mimeType" value="text/html" />
     <property name="relativeFilePath" value="web/editor.html" />
     <property name="pluginId" value="saiku-reporting" />

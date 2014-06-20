@@ -470,6 +470,10 @@ public class ReportGeneratorService {
 		String domainId = "";
 
 		String mql = spec.getDataSource().getQueryString();
+        mql = mql.replace("&gt;", ">");
+        mql = mql.replace("&lt;", "<");
+        mql = mql.replace("&gt;=", ">=");
+        mql = mql.replace("&lt;=", "<=");
 		Pattern p = Pattern.compile("<domain_id>(.*?)</domain_id>");
 		Matcher m = p.matcher(mql);
 		if (m.find()) {

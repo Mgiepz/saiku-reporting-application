@@ -230,7 +230,7 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>
-			<version>REFACTOR-SNAPSHOT</version>
+			<version>TRUNK-SNAPSHOT</version>
 			<exclusions>
 			<exclusion>
 					<groupId>janino</groupId>
