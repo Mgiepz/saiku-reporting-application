@@ -1,24 +1,20 @@
 package org.saiku.reporting.backend.util;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.commons.connection.IPentahoResultSet;
 import org.pentaho.commons.connection.memory.MemoryResultSet;
 import org.pentaho.metadata.model.IMetadataQueryExec;
-import org.pentaho.metadata.query.model.Parameter;
 import org.pentaho.metadata.query.model.Query;
 import org.pentaho.metadata.query.model.util.QueryXmlHelper;
 import org.saiku.reporting.backend.server.MetadataRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Map;
-import java.util.Properties;
 /**
  * Created by bugg on 12/05/14.
  */
 public class MetadataQueryComponent {
 
-    @Autowired
     private MetadataRepository metadataRepository;
 
     public void setMetadataRepository(MetadataRepository metadataRepository){

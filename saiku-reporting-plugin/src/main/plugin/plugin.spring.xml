@@ -34,8 +34,7 @@
      <property name="metadataRepository" ref="metadataRepository"/>
   </bean>
 
-
-    <bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
+  <bean id="metadataDiscoverResource" class="org.saiku.reporting.backend.rest.MetadataDiscoverResource" />
   
   <bean id="reportGeneratorService" scope="prototype" class="org.saiku.reporting.backend.service.ReportGeneratorService">
     <property name="reportingComponent" ref="reportingComponent" />

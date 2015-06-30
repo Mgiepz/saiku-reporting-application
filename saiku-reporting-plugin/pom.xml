@@ -1,8 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--parent>
+        <artifactId>saiku</artifactId>
+        <groupId>org.saiku</groupId>
+        <version>3.2.5.4</version>
+    </parent-->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.saiku</groupId>
-	<artifactId>saiku-reporting-bi-platform-plugin</artifactId>
+	<artifactId>saiku-reporting-bi-platform-plugin-p5</artifactId>
 	<packaging>jar</packaging>
 	<version>trunk-SNAPSHOT</version>
 	<name>saiku reporting biserver plugin</name>
@@ -10,14 +14,25 @@
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<pentaho.version>5.0.1-stable</pentaho.version>
+		<pentaho.version>5.3.0.2-261</pentaho.version>
+		<ctools.version>5.3.0.1-230</ctools.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<jersey.version>1.6</jersey.version>
 		<enunciate.version>1.23</enunciate.version>
 	</properties>
 	<build>
+		<!--resources>
+			<resource>
+				<directory>src/main/plugin</directory>
+				<targetPath>${basedir}/target/dist/saiku</targetPath>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.js</include>
+				</includes>
+			</resource>
+		</resources-->
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -29,7 +44,7 @@
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<artifactItems>
+						<artifactItems>
 								<artifactItem>
 									<groupId>org.saiku</groupId>
 									<artifactId>saiku-reporting-core</artifactId>
@@ -42,34 +57,16 @@
 									<version>trunk-SNAPSHOT</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
-								<!--<artifactItem>
-									<groupId>pentaho</groupId> 
-									<artifactId>cda-core</artifactId> 
-									<version>REFACTOR-SNAPSHOT</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
-								</artifactItem>								
-								<artifactItem>
-									<groupId>pentaho</groupId> 
-									<artifactId>cda-pentaho5</artifactId> 
-									<version>REFACTOR-SNAPSHOT</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
-								</artifactItem>-->
-								<!--artifactItem>
-									<groupId>pentaho</groupId> 
-									<artifactId>cda</artifactId> 
-									<version>TRUNK-SNAPSHOT</version>
-									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory> 
-								</artifactItem-->
 								<artifactItem>
 									<groupId>pentaho</groupId>
 									<artifactId>cpf-core</artifactId>
-									<version>REFACTOR-SNAPSHOT</version>
+									<version>${ctools.version}</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
 									<groupId>pentaho</groupId>
 									<artifactId>cpf-pentaho5</artifactId>
-									<version>REFACTOR-SNAPSHOT</version>
+									<version>${ctools.version}</version>
 									<outputDirectory>target/dist/saiku-reporting/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
@@ -79,7 +76,7 @@
 									<type>war</type>
 									<outputDirectory>target/stage</outputDirectory>
 								</artifactItem>
-							</artifactItems>
+                            </artifactItems>
 						</configuration>
 					</execution>
 				</executions>
@@ -89,6 +86,24 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
 				<executions>
 					<execution>
 						<id>copy-package</id>
@@ -98,30 +113,36 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<unzip dest="target/dist/saiku-reporting/web/">
+								<unzip dest="target/dist/saiku/ui/">
 									<fileset dir="target/stage/">
-										<include name="saiku-ui-SAIKU-UNITED.war" />
+										<include name="saiku-ui-${project.version}.war" />
 									</fileset>
 								</unzip>
-								<copy
-									file="${basedir}/target/${project.artifactId}-${project.version}.jar"
-									todir="target/dist/saiku-reporting/lib" />
-								<copy todir="target/dist/saiku-reporting/" overwrite="true">
-									<fileset dir="${basedir}/src/main/plugin/" />
+								<copy file="${basedir}/target/${project.artifactId}-${project.version}.jar" todir="target/dist/saiku/lib" />
+								<copy todir="target/dist/saiku/" overwrite="true">
+									<fileset dir="${basedir}/src/main/plugin/">
+										<include name="**/*.xml" />
+										<exclude name="**/version.xml" />
+									</fileset>
 								</copy>
-								<copy todir="target/dist/saiku-reporting/ui/" overwrite="true">
+                                <mkdir dir="target/dist/saiku/saiku-repository" />
+                                <copy todir="target/dist/saiku/ui/" overwrite="true">
 									<fileset dir="${basedir}/src/main/plugin/">
 										<include name="*.properties" />
 									</fileset>
 								</copy>
-								<zip destfile="target/saiku-reporting-plugin-${project.version}.zip">
+                                <patch patchfile="addplugins.patch" originalfile="target/dist/saiku/ui/index.html" failonerror="true" />
+								<zip destfile="target/saiku-plugin-p5-${project.version}.zip">
 									<zipfileset dir="target/dist/" />
 								</zip>
+
 							</tasks>
 						</configuration>
 					</execution>
 				</executions>
+
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -145,7 +166,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
+                <version>2.10.1</version>
+                <executions>
 					<execution>
 						<id>attach-javadocs</id>
 						<!-- Restrict execution of source compilation to install -->
@@ -156,45 +178,87 @@
 					</execution>
 				</executions>
 			</plugin>
+
+
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-resources-plugin
+										</artifactId>
+										<versionRange>
+											[2.3,)
+										</versionRange>
+										<goals>
+											<goal>testResources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<repositories>
-  	<repository>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <id>central</id>
-          <name>repo</name>
-          <url>http://repository.pentaho.org/artifactory/repo</url>
-        </repository>
-        <repository>
-          <snapshots />
-          <id>snapshots</id>
-          <name>repo</name>
-          <url>http://repository.pentaho.org/artifactory/repo</url>
-        </repository>
 		<repository>
 			<id>pentaho-third-party</id>
-			<url>http://repo.pentaho.org/artifactory/third-party/</url>
-		</repository>
-        <repository>
-			<id>alabs-repo</id>
-			<name>alabs repository</name>
-			<url>http://repo.analytical-labs.com/repo/</url>
+			<url>http://nexus.pentaho.org/content/repositories/proxied-3rd-party-releases/</url>
 		</repository>
 		<repository>
-			<id>ibiblio</id>
-			<url>http://ibiblio.org/maven2/</url>
+			<id>pentaho-public-release</id>
+			<url>http://nexus.pentaho.org/content/repositories/pentaho-public-release-repos/</url>
+		</repository>
+		<repository>
+			<id>pentaho-snapshot</id>
+			<url>http://nexus.pentaho.org/content/repositories/public-snapshots/</url>
+		</repository>
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/</url>
+		</repository>
+		<repository>
+			<id>Meteorite Repo</id>
+			<name>Analytical Labs Repo-releases</name>
+			<url>http://repo.meteorite.bi/content/repositories/alabs-release-local/</url>
+		</repository>
+		<repository>
+			<id>Meteorite snapshots</id>
+			<name>Analytical Labs Repo-releases</name>
+			<url>http://repo.meteorite.bi/content/repositories/alabs-snapshot-local/</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 		<repository>
-			<id>java</id>
-			<url>http://download.java.net/maven/2/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>apache</id>
+			<name>Apache repo</name>
+			<layout>default</layout>
+			<url>https://repository.apache.org/content/repositories/snapshots/</url>
+			<snapshots><enabled>true</enabled></snapshots>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -210,27 +274,10 @@
 			<version>trunk-SNAPSHOT</version>
 		</dependency>
 
-		<!-- CTOOLS -->
-		<!--<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>cda-core</artifactId>
-			<version>REFACTOR-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>cda-pentaho5</artifactId>
-			<version>REFACTOR-SNAPSHOT</version>
-    		<exclusions>
-        		<exclusion>
-            	<groupId>*</groupId>
-            	<artifactId>*</artifactId>
-        		</exclusion>
-    		</exclusions>
-		</dependency>-->
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cpf-core</artifactId>
-			<version>TRUNK-SNAPSHOT</version>
+			<version>${ctools.version}</version>
 			<exclusions>
 			<exclusion>
 					<groupId>janino</groupId>
@@ -241,7 +288,7 @@
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>cpf-pentaho5</artifactId>
-			<version>REFACTOR-SNAPSHOT</version>
+			<version>${ctools.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>pentaho</groupId>
@@ -371,13 +418,11 @@
 					<artifactId>secondstring</artifactId>
 					<groupId>secondstring</groupId>
 				</exclusion>
+				<exclusion>
+  					<groupId>pentaho</groupId>
+  					<artifactId>pentaho-hadoop-hive-jdbc-shim</artifactId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>pentaho</groupId>
-			<artifactId>pentaho-connections</artifactId>
-			<version>${pentaho.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- MISC -->
@@ -431,6 +476,6 @@
 			<artifactId>spring-security-core</artifactId>
 			<version>2.0.5.RELEASE</version>
 		</dependency>
+
 	</dependencies>
 </project>
-

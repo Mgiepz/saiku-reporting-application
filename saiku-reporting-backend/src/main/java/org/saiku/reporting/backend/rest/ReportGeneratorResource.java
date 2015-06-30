@@ -58,14 +58,17 @@ import org.springframework.stereotype.Component;
 @XmlAccessorType(XmlAccessType.NONE)
 public class ReportGeneratorResource {
 
+	public void setReportGeneratorService(
+			ReportGeneratorService reportGeneratorService) {
+		this.reportGeneratorService = reportGeneratorService;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	private Logger log = LoggerFactory.getLogger(ReportGeneratorResource.class);
 
-	@Autowired
 	private ReportGeneratorService reportGeneratorService;
 
-    @Autowired
     private MetadataQueryComponent metadataQueryComponent;
 
     public void setMetadataQueryComponent(MetadataQueryComponent metadataQueryComponent){

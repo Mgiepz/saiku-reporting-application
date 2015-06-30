@@ -6,7 +6,7 @@ import java.util.Map;
 import org.pentaho.platform.api.engine.IPluginLifecycleListener;
 import org.pentaho.platform.api.engine.PluginLifecycleException;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
-import org.pentaho.platform.plugin.services.importexport.Converter;
+import org.pentaho.platform.api.repository2.unified.Converter;
 import org.pentaho.platform.plugin.services.importexport.DefaultExportHandler;
 import org.pentaho.platform.plugin.services.importexport.StreamConverter;
 import org.slf4j.Logger;

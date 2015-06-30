@@ -34,7 +34,6 @@ import org.apache.commons.lang.StringUtils;
 import org.saiku.reporting.backend.service.ISessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -42,10 +41,8 @@ import org.springframework.stereotype.Component;
 @Path("saiku-reporting/api/session")
 public class SessionResource  {
 
-
 	private static final Logger log = LoggerFactory.getLogger(SessionResource.class);
 
-	//@Autowired
 	private ISessionService sessionService;
 
 	public void setSessionService(ISessionService ss) {

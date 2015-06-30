@@ -47,15 +47,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.pentaho.commons.connection.IPentahoResultSet;
-import org.pentaho.commons.connection.marshal.MarshallableResultSet;
-import org.pentaho.metadata.model.Domain;
-import org.pentaho.metadata.model.LogicalColumn;
-import org.pentaho.metadata.model.LogicalModel;
-import org.pentaho.metadata.model.concept.types.AggregationType;
-import org.pentaho.metadata.model.concept.types.DataType;
-import org.pentaho.metadata.query.model.*;
-import org.pentaho.metadata.query.model.util.QueryXmlHelper;
 import org.pentaho.metadata.repository.IMetadataDomainRepository;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -85,7 +76,6 @@ import org.saiku.reporting.core.model.TemplateDefinition;
 import org.saiku.reporting.core.model.types.DatasourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import pt.webdetails.cpf.repository.api.IBasicFile;
 import pt.webdetails.cpf.repository.api.IContentAccessFactory;
@@ -94,10 +84,13 @@ import pt.webdetails.cpf.repository.api.IUserContentAccess;
 
 public class ReportGeneratorService {
 
+	public void setContentAccessFactory(IContentAccessFactory contentAccessFactory) {
+		this.contentAccessFactory = contentAccessFactory;
+	}
+
 	private static final Logger log = LoggerFactory
 			.getLogger(ReportGeneratorService.class);
 
-	@Autowired
 	private MetadataRepository metadataRepository;
 
 	//@Autowired
@@ -105,7 +98,6 @@ public class ReportGeneratorService {
 
 	private IReportingComponent reportingComponent;
 
-	@Autowired
 	private IContentAccessFactory contentAccessFactory;
 
 	public void setReportingComponent(IReportingComponent reportingComponent) {

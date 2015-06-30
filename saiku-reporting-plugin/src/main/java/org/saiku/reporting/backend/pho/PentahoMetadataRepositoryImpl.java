@@ -87,10 +87,6 @@ public class PentahoMetadataRepositoryImpl extends AbstractMetadataRepository {
 
 	}
 
-	//public ReportTemplate[] loadTemplates() {
-		// TODO Auto-generated method stub
-	//	return null;
-	//}
 
 	/**
 	 * Returns a instance of the IMetadataDomainRepository for the current
@@ -104,8 +100,6 @@ public class PentahoMetadataRepositoryImpl extends AbstractMetadataRepository {
 						PentahoSessionHolder.getSession());
 		return mdr;
 	}
-
-
 
     public Object getExecutor(Object queryObject, Map<String, Object> inputs, MetadataRepository metadataRepository){
        IPentahoSession session = null;

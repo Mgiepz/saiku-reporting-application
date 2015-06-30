@@ -54,9 +54,12 @@ import org.springframework.stereotype.Component;
 @Scope("request")
 public class MetadataDiscoverResource {
 
+	public void setMetadataRepository(MetadataRepository metadataRepository) {
+		this.metadataRepository = metadataRepository;
+	}
+
 	private static final Log log = LogFactory.getLog(MetadataDiscoverResource.class);
-    
-    @Autowired
+
     private MetadataRepository metadataRepository;
 
     /**
