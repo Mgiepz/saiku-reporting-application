@@ -297,7 +297,11 @@
 				<exclusion>
 					<groupId>janino</groupId>
 					<artifactId>janino</artifactId>
-				</exclusion>		
+				</exclusion>
+				<exclusion>
+					<groupId>pentaho</groupId>
+					<artifactId>pentaho-platform-extensions</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -314,6 +318,10 @@
 				<exclusion>
 					<groupId>janino</groupId>
 					<artifactId>janino</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>pentaho</groupId>
+					<artifactId>pentaho-platform-extensions</artifactId>
 				</exclusion>
 			</exclusions>
 			<scope>provided</scope>
@@ -374,13 +382,16 @@
 					<artifactId>secondstring</artifactId>
 					<groupId>secondstring</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>pentaho</groupId>
+					<artifactId>pentaho-platform-extensions</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>pentaho-platform-extensions</artifactId>
-			<version>${pentaho.version}</version>
-			<scope>provided</scope>
+			<version>${ctools.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.faces</groupId>
